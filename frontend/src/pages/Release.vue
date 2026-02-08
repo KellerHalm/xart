@@ -21,7 +21,7 @@
         <ReleaseInfoInfo
           :country="release.country"
           :aired-on-date="release.aired_on_date"
-          :year="release.year"
+          :year="release.year ? Number(release.year) : null"
           :episodes="{ total: release.episodes_total, released: release.episodes_released }"
           :season="release.season"
           :status="release.status ? release.status.name : 'Анонс'"

@@ -11,7 +11,7 @@
       <div class="mt-6 space-y-6">
         <div class="flex items-center gap-2">
           <span class="iconify material-symbols--palette-outline h-6 w-6"></span>
-          <p class="section-title text-lg">нтерфейс</p>
+          <p class="section-title text-lg">Интерфейс</p>
         </div>
         <div class="flex flex-wrap items-center justify-between gap-4">
           <p>Тема</p>
@@ -143,9 +143,9 @@ const bookmarksCategory: Record<string, string> = {
 };
 
 const fifthButton: Record<string, string> = {
-  favorites: "збранное",
+  favorites: "Избранное",
   collections: "Коллекции",
-  history: "стория",
+  history: "История",
   discovery: "Обзор",
 };
 

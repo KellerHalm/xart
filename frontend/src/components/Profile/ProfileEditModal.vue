@@ -150,6 +150,14 @@
           </div>
         </div>
       </div>
+      <div class="flex items-center justify-end gap-2 border-t border-white/10 px-6 py-4 dark:border-white/10">
+        <button
+          class="btn-accent rounded-lg px-4 py-2 text-sm font-semibold"
+          @click="emit('close')"
+        >
+          Готово
+        </button>
+      </div>
     </div>
   </div>
 

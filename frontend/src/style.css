@@ -19,11 +19,33 @@
   --xart-accent-bg: #2a1718;
 }
 
+/* Light theme variables */
+.light {
+  color-scheme: light;
+  --xart-bg: #f8f9fa;
+  --xart-bg-rgb: 248, 249, 250;
+  --xart-panel: #ffffff;
+  --xart-panel-2: #f1f3f5;
+  --xart-panel-3: #f8f9fa;
+  --xart-text: #212529;
+  --xart-muted: #6c757d;
+  --xart-accent: #d21c22;
+  --xart-accent-strong: #b01218;
+  --xart-accent-soft: #e64a4a;
+  --xart-accent-rgb: 210, 28, 34;
+  --xart-accent-bg: #f8d7da;
+}
+
 body {
   margin: 0;
   min-height: 100vh;
   background: radial-gradient(1200px 600px at 50% -10%, rgba(255, 255, 255, 0.04), transparent 60%), var(--xart-bg);
   color: var(--xart-text);
+}
+
+/* Adjust background for light theme */
+.light body {
+  background: radial-gradient(1200px 600px at 50% -10%, rgba(0, 0, 0, 0.02), transparent 60%), var(--xart-bg);
 }
 
 .title-main {
@@ -214,6 +236,17 @@ body {
 .dark .text-gray-300 { color: #c5c7ca !important; }
 .dark .text-gray-400 { color: #9aa0a6 !important; }
 .dark .text-gray-500 { color: #8c9197 !important; }
+
+/* Light theme token remap */
+.light .bg-slate-800 { background-color: #374151 !important; }
+.light .bg-slate-900 { background-color: #1f2937 !important; }
+.light .bg-gray-700 { background-color: #4b5563 !important; }
+.light .bg-gray-800 { background-color: #374151 !important; }
+.light .border-gray-700 { border-color: #4b5563 !important; }
+.light .border-gray-600 { border-color: #6b7280 !important; }
+.light .text-gray-300 { color: #d1d5db !important; }
+.light .text-gray-400 { color: #9ca3af !important; }
+.light .text-gray-500 { color: #6b7280 !important; }
 
 /* Xart palette overrides */
 .bg-black\/90 { background-color: rgba(var(--xart-bg-rgb), 0.92) !important; }
