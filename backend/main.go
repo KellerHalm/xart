@@ -1,10 +1,10 @@
 package main
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
-	"bytes"
 	"io"
 	"log"
 	"net/http"
@@ -38,6 +38,7 @@ func main() {
 	mux.HandleFunc("/api/version", withCORS(cfg, handleVersion(cfg)))
 	mux.HandleFunc("/api/version/", withCORS(cfg, handleVersion(cfg)))
 	mux.HandleFunc("/api/proxy/", withCORS(cfg, handleProxy(cfg)))
+	mux.HandleFunc("/api/image", withCORS(cfg, handleImageProxy()))
 
 	server := &http.Server{
 		Addr:         ":" + cfg.Port,
@@ -173,6 +174,78 @@ func handleProxy(cfg Config) http.HandlerFunc {
 	}
 }
 
+func handleImageProxy() http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+		if r.Method != http.MethodGet {
+			http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		raw := strings.TrimSpace(r.URL.Query().Get("url"))
+		if raw == "" {
+			http.Error(w, "missing url query param", http.StatusBadRequest)
+			return
+		}
+
+		target, err := url.Parse(raw)
+		if err != nil || target.Host == "" {
+			http.Error(w, "invalid url", http.StatusBadRequest)
+			return
+		}
+		if target.Scheme != "https" && target.Scheme != "http" {
+			http.Error(w, "unsupported url scheme", http.StatusBadRequest)
+			return
+		}
+		if !isAllowedImageHost(target.Hostname()) {
+			http.Error(w, "host is not allowed", http.StatusForbidden)
+			return
+		}
+
+		req, err := http.NewRequestWithContext(r.Context(), http.MethodGet, target.String(), nil)
+		if err != nil {
+			http.Error(w, "failed to create upstream request", http.StatusInternalServerError)
+			return
+		}
+		req.Header.Set("User-Agent", DefaultUserAgent)
+		req.Header.Set("Accept", "image/*,*/*;q=0.8")
+
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			http.Error(w, "failed to load image", http.StatusBadGateway)
+			return
+		}
+		defer resp.Body.Close()
+
+		contentType := strings.ToLower(resp.Header.Get("Content-Type"))
+		if resp.StatusCode >= http.StatusOK && resp.StatusCode < http.StatusMultipleChoices && !strings.HasPrefix(contentType, "image/") {
+			http.Error(w, "upstream did not return image", http.StatusBadGateway)
+			return
+		}
+
+		copyImageHeaders(w.Header(), resp.Header)
+		w.WriteHeader(resp.StatusCode)
+		if _, err := io.Copy(w, resp.Body); err != nil {
+			log.Printf("image proxy response copy error: %v", err)
+		}
+	}
+}
+
+func isAllowedImageHost(host string) bool {
+	if host == "" {
+		return false
+	}
+
+	host = strings.ToLower(host)
+	if host == "anixmirai.com" || strings.HasSuffix(host, ".anixmirai.com") {
+		return true
+	}
+	if host == "anixsekai.com" || strings.HasSuffix(host, ".anixsekai.com") {
+		return true
+	}
+
+	return false
+}
+
 func newProxyRequest(r *http.Request, target string) (*http.Request, error) {
 	u, err := url.Parse(target)
 	if err != nil {
@@ -263,6 +336,14 @@ func copyHeaders(dst, src http.Header) {
 	for key, values := range src {
 		for _, value := range values {
 			dst.Add(key, value)
+		}
+	}
+}
+
+func copyImageHeaders(dst, src http.Header) {
+	for _, key := range []string{"Content-Type", "Content-Length", "Cache-Control", "ETag", "Last-Modified"} {
+		if value := src.Get(key); value != "" {
+			dst.Set(key, value)
 		}
 	}
 }

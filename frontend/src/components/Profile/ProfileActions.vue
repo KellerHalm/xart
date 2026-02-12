@@ -1,7 +1,7 @@
-<template>
-  <div class="card-surface rounded-xl p-4">
+﻿<template>
+  <div class="card-surface rounded-2xl p-5 sm:p-6">
     <p v-if="isRequestedStatus != null && !isRequestedStatus && friendStatusComputed !== 1" class="mb-2 text-sm">
-      Отправил(-а) вам заявку в друзья
+      РћС‚РїСЂР°РІРёР»(-Р°) РІР°Рј Р·Р°СЏРІРєСѓ РІ РґСЂСѓР·СЊСЏ
     </p>
     <div class="flex flex-wrap gap-2">
       <button
@@ -9,7 +9,7 @@
         class="btn-accent rounded-lg px-4 py-2 text-sm font-semibold"
         @click="toggleEdit"
       >
-        Редактировать
+        Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ
       </button>
 
       <template v-else>
@@ -28,10 +28,10 @@
         >
           {{
             friendStatusComputed === 1
-              ? "Удалить из друзей"
+              ? "РЈРґР°Р»РёС‚СЊ РёР· РґСЂСѓР·РµР№"
               : isRequestedStatus
-              ? "Заявка отправлена"
-              : "Добавить в друзья"
+              ? "Р—Р°СЏРІРєР° РѕС‚РїСЂР°РІР»РµРЅР°"
+              : "Р”РѕР±Р°РІРёС‚СЊ РІ РґСЂСѓР·СЊСЏ"
           }}
         </button>
         <button
@@ -44,7 +44,7 @@
           :disabled="actionsDisabled"
           @click="addToBlocklist"
         >
-          {{ !isBlocked ? "Заблокировать" : "Разблокировать" }}
+          {{ !isBlocked ? "Р—Р°Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ" : "Р Р°Р·Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ" }}
         </button>
       </template>
     </div>
@@ -120,7 +120,7 @@ function toggleEdit() {
 async function addToFriends() {
   actionsDisabled.value = true;
 
-  const tid = toast.loading("Добавляем в друзья...");
+  const tid = toast.loading("Р”РѕР±Р°РІР»СЏРµРј РІ РґСЂСѓР·СЊСЏ...");
 
   let url = `${ENDPOINTS.user.profile}/friend/request`;
   if (friendStatusComputed.value === 1 || isRequestedStatus.value) {
@@ -135,8 +135,8 @@ async function addToFriends() {
     toast.update(tid, {
       render:
         friendStatusComputed.value === 1 || isRequestedStatus.value
-          ? "Ошибка удаления из друзей"
-          : "Ошибка добавления в друзья",
+          ? "РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РёР· РґСЂСѓР·РµР№"
+          : "РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ РІ РґСЂСѓР·СЊСЏ",
       type: "error",
       autoClose: 2500,
       isLoading: false,
@@ -150,8 +150,8 @@ async function addToFriends() {
   toast.update(tid, {
     render:
       friendStatusComputed.value === 1 || isRequestedStatus.value
-        ? "Удален из друзей"
-        : "Добавлен в друзья",
+        ? "РЈРґР°Р»РµРЅ РёР· РґСЂСѓР·РµР№"
+        : "Р”РѕР±Р°РІР»РµРЅ РІ РґСЂСѓР·СЊСЏ",
     type: "success",
     autoClose: 2500,
     isLoading: false,
@@ -163,7 +163,7 @@ async function addToFriends() {
 async function addToBlocklist() {
   actionsDisabled.value = true;
   const tid = toast.loading(
-    !props.isBlocked ? "Блокируем пользователя..." : "Разблокируем пользователя..."
+    !props.isBlocked ? "Р‘Р»РѕРєРёСЂСѓРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ..." : "Р Р°Р·Р±Р»РѕРєРёСЂСѓРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ..."
   );
 
   let url = `${ENDPOINTS.user.profile}/blocklist`;
@@ -173,7 +173,7 @@ async function addToBlocklist() {
   const { error } = await tryCatchAPI(fetch(url));
   if (error) {
     toast.update(tid, {
-      render: !props.isBlocked ? "Ошибка блокировки" : "Ошибка разблокировки",
+      render: !props.isBlocked ? "РћС€РёР±РєР° Р±Р»РѕРєРёСЂРѕРІРєРё" : "РћС€РёР±РєР° СЂР°Р·Р±Р»РѕРєРёСЂРѕРІРєРё",
       type: "error",
       autoClose: 2500,
       isLoading: false,
@@ -185,7 +185,7 @@ async function addToBlocklist() {
   emit("refresh");
 
   toast.update(tid, {
-    render: !props.isBlocked ? "Пользователь заблокирован" : "Пользователь разблокирован",
+    render: !props.isBlocked ? "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ" : "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЂР°Р·Р±Р»РѕРєРёСЂРѕРІР°РЅ",
     type: "success",
     autoClose: 2500,
     isLoading: false,
@@ -194,5 +194,6 @@ async function addToBlocklist() {
   actionsDisabled.value = false;
 }
 </script>
+
 
 

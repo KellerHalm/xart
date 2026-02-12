@@ -1,12 +1,12 @@
-<template>
-  <div class="card-surface rounded-xl p-4">
+﻿<template>
+  <div class="card-surface rounded-2xl p-5 sm:p-6">
     <div class="flex items-center justify-between">
-      <h1 class="section-title text-xl">Оценки</h1>
+      <h1 class="section-title text-xl">РћС†РµРЅРєРё</h1>
       <button
         class="btn-outline rounded-lg px-3 py-1 text-xs font-semibold"
         @click="modalOpen = true"
       >
-        Посмотреть все
+        РџРѕСЃРјРѕС‚СЂРµС‚СЊ РІСЃРµ
       </button>
     </div>
     <div class="mt-4 flex flex-col gap-4">
@@ -58,5 +58,6 @@ defineProps<{
 
 const modalOpen = ref(false);
 </script>
+
 
 

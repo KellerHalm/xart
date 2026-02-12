@@ -25,13 +25,13 @@
           <span
             v-for="(genre, index) in genresList.slice(0, 3)"
             :key="`genre-${id}-${genre}-${index}`"
-            class="rounded-full border border-white/20 bg-white/10 px-2 py-1 text-xs text-white"
+            class="rounded-full border border-white/30 bg-black/45 px-2 py-1 text-xs font-medium text-white shadow backdrop-blur-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.85)]"
           >
             {{ genre }}
           </span>
           <span
             v-if="genresList.length > 3"
-            class="rounded-full border border-white/20 bg-white/10 px-2 py-1 text-xs text-white"
+            class="rounded-full border border-white/30 bg-black/45 px-2 py-1 text-xs font-medium text-white shadow backdrop-blur-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.85)]"
           >
             +{{ genresList.length - 3 }}
           </span>
@@ -54,6 +54,10 @@
 import { computed } from "vue";
 import Poster from "@/components/ReleasePoster/Poster.vue";
 import ReleaseChips from "@/components/ReleasePoster/Chips.vue";
+
+defineOptions({
+  inheritAttrs: false,
+});
 
 const props = defineProps<{
   image: string;
@@ -129,4 +133,3 @@ const episodesTotal = computed(() => props.episodes_total);
 const category = computed(() => props.category);
 const isFavorite = computed(() => props.is_favorite);
 </script>
-

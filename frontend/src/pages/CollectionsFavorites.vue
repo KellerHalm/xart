@@ -1,13 +1,13 @@
-<template>
+﻿<template>
   <div>
     <div class="flex items-center justify-between border-b border-white/10 px-4 py-2">
-      <h1 class="section-title text-lg">збранные коллекции</h1>
+      <h1 class="section-title text-lg">Избранные коллекции</h1>
     </div>
     <div v-if="isLoading" class="flex min-h-[50vh] items-center justify-center">
       <Spinner />
     </div>
     <div v-else-if="content.length">
-      <CollectionSection title="збранные коллекции" :content="content" />
+      <CollectionSection title="Избранные коллекции" :content="content" />
       <button
         v-if="hasMore"
         class="btn-outline mt-4 w-full rounded-lg px-4 py-2 text-sm"
@@ -18,7 +18,7 @@
     </div>
     <div v-else class="card-surface mt-6 flex flex-col items-center justify-center gap-4 rounded-xl p-6 text-center">
       <span class="iconify twemoji--open-book h-16 w-16"></span>
-      <p>збранных коллекций пока нет.</p>
+      <p>Избранных коллекций пока нет.</p>
     </div>
   </div>
 </template>

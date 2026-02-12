@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div v-if="isLoading" class="flex min-h-screen items-center justify-center">
     <Spinner />
   </div>
@@ -31,7 +31,7 @@
     />
     <CollectionSection
       v-if="favoriteCollections.length"
-      title="збранные коллекции"
+      title="Избранные коллекции"
       :content="favoriteCollections"
       show-all-link="/collections/favorites"
     />

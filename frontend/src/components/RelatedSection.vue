@@ -31,6 +31,10 @@
 import { computed } from "vue";
 import { numberDeclension } from "@/api/utils";
 
+defineOptions({
+  inheritAttrs: false,
+});
+
 const props = defineProps<{
   id: number;
   name_ru?: string;
@@ -46,5 +50,4 @@ const declension = computed(() =>
   numberDeclension(releaseCount.value, "релиз", "релиза", "релизов")
 );
 </script>
-
 

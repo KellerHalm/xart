@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <div class="flex items-center justify-between border-b border-white/10 px-4 py-2">
       <h1 class="section-title text-lg">Смотрят сейчас</h1>

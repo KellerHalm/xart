@@ -1,9 +1,9 @@
 <template>
   <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
-    <div class="w-full max-w-2xl rounded-xl border border-white/10 bg-[#1f2123] p-6 shadow-xl">
-      <div class="flex items-center justify-between border-b border-white/10 pb-4">
+    <div class="w-full max-w-2xl rounded-xl border border-black/10 bg-[color:var(--xart-panel)] p-6 shadow-xl dark:border-white/10">
+      <div class="flex items-center justify-between border-b border-black/10 pb-4 dark:border-white/10">
         <h2 class="section-title text-xl">Настройки</h2>
-        <button class="text-gray-400 hover:text-white" @click="emit('close')">
+        <button class="text-gray-500 hover:text-gray-900 dark:text-gray-400 dark:hover:text-white" @click="emit('close')">
           ✕
         </button>
       </div>
@@ -72,7 +72,7 @@
           <p>Пятый пункт в навигации</p>
           <select
             class="input-dark rounded-lg px-3 py-2 text-sm"
-            :value="preferences.flags.showFifthButton ?? 'none'"
+            :value="preferences.flags.showFifthButton === 'favorites' ? 'none' : (preferences.flags.showFifthButton ?? 'none')"
             @change="setFifthButton"
           >
             <option value="none">Не показывать</option>
@@ -82,7 +82,7 @@
           </select>
         </div>
 
-        <div class="border-t border-white/10 pt-4">
+        <div class="border-t border-black/10 pt-4 dark:border-white/10">
           <div class="flex items-center gap-2">
             <span class="iconify material-symbols--settings-outline h-6 w-6"></span>
             <p class="section-title text-lg">Приложение</p>
@@ -143,7 +143,6 @@ const bookmarksCategory: Record<string, string> = {
 };
 
 const fifthButton: Record<string, string> = {
-  favorites: "Избранное",
   collections: "Коллекции",
   history: "История",
   discovery: "Обзор",
@@ -197,4 +196,6 @@ function toggleWatchHistory() {
   preferences.setFlags({ saveWatchHistory: !preferences.flags.saveWatchHistory });
 }
 </script>
+
+
 

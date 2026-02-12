@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div class="flex flex-wrap gap-1.5" v-if="chipSettings.enabled">
     <Chip
       v-if="!chipSettings.gradeHidden && grade"
@@ -25,6 +25,7 @@
     />
     <Chip
       v-if="!chipSettings.listHidden && userList"
+      class="!text-white"
       :bg-color="userList.bg_color"
       :name="userList.name"
     />
@@ -98,3 +99,4 @@ const statusColor = computed(() => {
   return "chip-muted";
 });
 </script>
+

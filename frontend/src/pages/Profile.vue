@@ -1,17 +1,17 @@
-<template>
+﻿<template>
   <div v-if="isLoading" class="flex min-h-screen items-center justify-center">
     <Spinner />
   </div>
   <div v-else-if="error" class="flex min-h-screen items-center justify-center">
-    <div class="flex flex-col gap-2">
-      <h1 class="text-2xl font-bold">Ошибка</h1>
+    <div class="flex flex-col gap-4">
+      <h1 class="text-2xl font-bold">РћС€РёР±РєР°</h1>
       <p class="text-lg">
-        Произошла ошибка при загрузке профиля. Попробуйте обновить страницу или зайдите позже.
+        РџСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР° РїСЂРё Р·Р°РіСЂСѓР·РєРµ РїСЂРѕС„РёР»СЏ. РџРѕРїСЂРѕР±СѓР№С‚Рµ РѕР±РЅРѕРІРёС‚СЊ СЃС‚СЂР°РЅРёС†Сѓ РёР»Рё Р·Р°Р№РґРёС‚Рµ РїРѕР·Р¶Рµ.
       </p>
     </div>
   </div>
   <div v-else-if="user" class="space-y-4">
-    <div class="flex flex-col gap-2">
+    <div class="flex flex-col gap-4">
       <ProfileBannedBanner
         :is-banned="user.is_banned"
         :is-perm-banned="user.is_perm_banned"
@@ -25,7 +25,7 @@
     </div>
 
     <div
-      class="grid grid-cols-1 gap-2 lg:grid-cols-2"
+      class="grid grid-cols-1 gap-4 lg:grid-cols-2"
       :class="
         user.is_banned ||
         user.is_perm_banned ||
@@ -36,7 +36,7 @@
           : ''
       "
     >
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-4">
         <ProfileUser
           :avatar="user.avatar || ''"
           :login="user.login || ''"
@@ -85,7 +85,7 @@
           :is-my-profile="isMyProfile"
         />
 
-        <div v-if="!user.is_stats_hidden" class="hidden flex-col gap-2 lg:flex">
+        <div v-if="!user.is_stats_hidden" class="hidden flex-col gap-4 lg:flex">
           <ProfileReleaseRatings
             v-if="user.votes && user.votes.length > 0"
             :ratings="user.votes"
@@ -95,7 +95,7 @@
         </div>
       </div>
 
-      <div class="flex flex-col gap-2">
+      <div class="flex flex-col gap-4">
         <template v-if="!user.is_stats_hidden">
           <ProfileStats
             :lists="[
@@ -113,7 +113,7 @@
             :preferred-themes="user.preferred_themes || []"
           />
           <ProfileWatchDynamic :watch-dynamic="user.watch_dynamics || []" />
-          <div class="flex flex-col gap-2 lg:hidden">
+          <div class="flex flex-col gap-4 lg:hidden">
             <ProfileReleaseRatings
               v-if="user.votes && user.votes.length > 0"
               :ratings="user.votes"
@@ -193,3 +193,4 @@ watch(
   () => fetchProfile()
 );
 </script>
+

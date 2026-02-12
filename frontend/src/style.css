@@ -93,6 +93,70 @@ body {
   color: #ffffff;
 }
 
+.bookmarks-shell {
+  padding-top: 2.5rem;
+}
+
+.bookmarks-title {
+  margin: 0;
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 500;
+  color: rgba(230, 230, 230, 0.95);
+}
+
+.bookmarks-filters {
+  margin-top: 2rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 0.5rem;
+}
+
+.bookmark-filter {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  border-radius: 0.55rem;
+  border: 1px solid rgba(var(--xart-accent-rgb), 0.95);
+  background: transparent;
+  padding: 0.35rem 0.75rem;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: rgba(210, 28, 34, 0.95);
+}
+
+.bookmark-filter:hover {
+  background: rgba(var(--xart-accent-rgb), 0.14);
+}
+
+.bookmark-filter--active {
+  background: var(--xart-accent);
+  color: #fff;
+}
+
+.bookmark-empty-hint {
+  margin-top: 6rem;
+  color: rgba(230, 230, 230, 0.58);
+  font-size: 2rem;
+  line-height: 1.25;
+}
+
+@media (max-width: 640px) {
+  .bookmarks-shell {
+    padding-top: 1.5rem;
+  }
+
+  .bookmarks-title {
+    font-size: 1.65rem;
+  }
+
+  .bookmark-empty-hint {
+    margin-top: 3.5rem;
+    font-size: 1.3rem;
+  }
+}
+
 .btn-outline {
   border: 1px solid rgba(255, 255, 255, 0.12);
   background: rgba(255, 255, 255, 0.02);
@@ -244,8 +308,8 @@ body {
 .light .bg-gray-800 { background-color: #374151 !important; }
 .light .border-gray-700 { border-color: #4b5563 !important; }
 .light .border-gray-600 { border-color: #6b7280 !important; }
-.light .text-gray-300 { color: #d1d5db !important; }
-.light .text-gray-400 { color: #9ca3af !important; }
+.light .text-gray-300 { color: #374151 !important; }
+.light .text-gray-400 { color: #4b5563 !important; }
 .light .text-gray-500 { color: #6b7280 !important; }
 
 /* Xart palette overrides */
@@ -692,6 +756,16 @@ body {
   100% {
     left: 100%;
   }
+}
+
+/* Hide scrollbars but keep scrolling */
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
 }
 
 /* Анимации для иконок */

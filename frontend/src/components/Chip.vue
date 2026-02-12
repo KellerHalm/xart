@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex items-center justify-center rounded-full border border-white/10 px-2 py-1 text-xs font-semibold text-white shadow backdrop-blur-sm"
+    class="flex items-center justify-center rounded-full border border-white/20 px-2 py-1 text-xs font-semibold !text-white shadow backdrop-blur-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.85)]"
     :class="bgColor"
   >
     <span>{{ name }}</span>

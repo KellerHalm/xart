@@ -5,36 +5,36 @@
         <div class="space-y-6 p-6">
           <div class="flex items-center gap-3">
             <img src="/images/icons/xart.svg" alt="Xart" class="h-10 w-10" />
-            <h1 class="text-xl font-bold text-white">Вход в аккаунт Xart</h1>
+            <h1 class="text-xl font-bold text-gray-900 dark:text-white">Вход в аккаунт Xart</h1>
           </div>
           <form class="space-y-4" @submit.prevent="submit">
             <div>
-              <label class="mb-2 block text-sm font-medium text-gray-200">
+              <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
                 Логин или эл. почта
               </label>
               <input
                 v-model="login"
                 type="text"
-                class="block w-full rounded-lg border border-white/10 bg-[#1f2022] p-2.5 text-gray-100 focus:border-[#e04545] focus:ring-[#e04545]"
+                class="block w-full rounded-lg border border-white/10 bg-[#1f2022] p-2.5 text-gray-900 dark:text-gray-100 focus:border-[#e04545] focus:ring-[#e04545]"
                 placeholder="name@company.com"
                 required
               />
             </div>
             <div>
-              <label class="mb-2 block text-sm font-medium text-gray-200">
+              <label class="mb-2 block text-sm font-medium text-gray-700 dark:text-gray-200">
                 Пароль
               </label>
               <input
                 v-model="password"
                 type="password"
-                class="block w-full rounded-lg border border-white/10 bg-[#1f2022] p-2.5 text-gray-100 focus:border-[#e04545] focus:ring-[#e04545]"
+                class="block w-full rounded-lg border border-white/10 bg-[#1f2022] p-2.5 text-gray-900 dark:text-gray-100 focus:border-[#e04545] focus:ring-[#e04545]"
                 placeholder="••••••••"
                 required
               />
             </div>
             <div class="flex items-center gap-2">
               <input v-model="remember" type="checkbox" class="h-4 w-4 rounded border-white/10 bg-[#1f2022]" />
-              <span class="text-sm text-gray-300">Запомнить вход</span>
+              <span class="text-sm text-gray-700 dark:text-gray-300">Запомнить вход</span>
             </div>
             <button
               type="submit"

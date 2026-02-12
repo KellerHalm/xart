@@ -1,9 +1,9 @@
-<template>
+﻿<template>
   <div v-if="isOpen" class="fixed inset-0 z-50 flex items-center justify-center bg-black/60 p-4">
     <div class="max-h-[90vh] w-full max-w-6xl overflow-hidden rounded-xl border border-white/10 bg-[#1f2123] shadow-xl">
       <div class="flex items-center justify-between border-b border-white/10 px-6 py-4">
         <h2 class="section-title text-xl">Популярное</h2>
-        <button class="text-gray-400 hover:text-white" @click="emit('close')">✕</button>
+        <button class="text-gray-400 hover:text-white" @click="emit('close')">×</button>
       </div>
       <div class="px-6 py-4">
         <div class="flex flex-wrap gap-2">
@@ -69,7 +69,3 @@ watch(
   }
 );
 </script>
-
-
-
-

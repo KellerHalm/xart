@@ -1,27 +1,27 @@
-<template>
-  <div class="card-surface rounded-xl p-4">
-    <h1 class="section-title text-xl">Активность</h1>
+﻿<template>
+  <div class="card-surface rounded-2xl p-5 sm:p-6">
+    <h1 class="section-title text-xl">РђРєС‚РёРІРЅРѕСЃС‚СЊ</h1>
     <div class="mt-3 flex flex-wrap gap-2">
       <button
         class="rounded-lg px-3 py-2 text-sm tab-pill"
         :class="tab === 'collections' ? 'tab-pill tab-pill-active' : 'tab-pill'"
         @click="tab = 'collections'"
       >
-        Коллекции ( {{ collectionCount }} )
+        РљРѕР»Р»РµРєС†РёРё ( {{ collectionCount }} )
       </button>
       <button
         class="rounded-lg px-3 py-2 text-sm tab-pill"
         :class="tab === 'comments' ? 'tab-pill tab-pill-active' : 'tab-pill'"
         @click="tab = 'comments'"
       >
-        Комментарии ( {{ commentCount }} )
+        РљРѕРјРјРµРЅС‚Р°СЂРёРё ( {{ commentCount }} )
       </button>
       <button
         class="rounded-lg px-3 py-2 text-sm tab-pill"
         :class="tab === 'friends' ? 'tab-pill tab-pill-active' : 'tab-pill'"
         @click="tab = 'friends'"
       >
-        Друзья ( {{ friendsCount }} )
+        Р”СЂСѓР·СЊСЏ ( {{ friendsCount }} )
       </button>
     </div>
 
@@ -88,6 +88,7 @@ watch(
   { immediate: true }
 );
 </script>
+
 
 
 

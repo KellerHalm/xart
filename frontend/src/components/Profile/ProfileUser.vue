@@ -1,13 +1,13 @@
-<template>
-  <div class="card-surface rounded-xl p-4">
+﻿<template>
+  <div class="card-surface rounded-2xl p-5 sm:p-6">
     <div
       v-if="showRoles"
       class="mb-4 flex flex-wrap gap-2"
     >
-      <ProfileRole v-if="isMyProfile" name="Мой профиль" color="3f83f8" />
-      <ProfileRole v-if="isBlocked" name="Заблокирован" color="f56565" />
-      <ProfileRole v-if="isVerified" name="Верифицирован" color="0e9f6e" />
-      <ProfileRole v-if="isSponsor" name="Спонсор Xart" color="ecc94b" />
+      <ProfileRole v-if="isMyProfile" name="РњРѕР№ РїСЂРѕС„РёР»СЊ" color="3f83f8" />
+      <ProfileRole v-if="isBlocked" name="Р—Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ" color="f56565" />
+      <ProfileRole v-if="isVerified" name="Р’РµСЂРёС„РёС†РёСЂРѕРІР°РЅ" color="0e9f6e" />
+      <ProfileRole v-if="isSponsor" name="РЎРїРѕРЅСЃРѕСЂ Xart" color="ecc94b" />
       <ProfileRole
         v-for="role in roles"
         :key="role.id"
@@ -127,5 +127,6 @@ const hasSocials = computed(
 
 const fallbackAvatar = "https://s.anixmirai.com/avatars/no_avatar.jpg";
 </script>
+
 
 

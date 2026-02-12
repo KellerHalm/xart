@@ -1,5 +1,5 @@
-<template>
-  <div class="card-surface rounded-xl p-4">
+﻿<template>
+  <div class="card-surface rounded-2xl p-5 sm:p-6">
     <h1 class="section-title text-xl">Недавно просмотренные</h1>
     <div class="mt-4 flex flex-col gap-4">
       <router-link
@@ -70,5 +70,6 @@ function parseGenres(genres?: string) {
   return genres.split(",").map((genre) => genre.trim());
 }
 </script>
+
 
 

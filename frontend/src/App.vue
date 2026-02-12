@@ -1,12 +1,12 @@
 <template>
   <LoadingScreen v-if="showLoadingScreen" @complete="showLoadingScreen = false" />
-  <div v-else class="min-h-screen overflow-x-hidden bg-[#1b1c1d] text-gray-100 dark:bg-[#1b1c1d] dark:text-gray-100">
+  <div v-else class="min-h-screen overflow-x-hidden bg-[#1b1c1d] text-[color:var(--xart-text)] dark:bg-[#1b1c1d]">
     <div v-if="!preferences._hasHydrated && userStore.state === 'loading'" class="flex h-screen items-center justify-center">
       <Spinner size="lg" />
     </div>
     <div v-else>
       <NavBarPc @open-settings="openSettings" />
-      <main class="container mx-auto px-2 pb-24 pt-4 lg:pb-0">
+      <main class="container mx-auto px-2 pb-24 pt-4 lg:pb-0 lg:pt-20">
         <router-view />
       </main>
       <NavBarMobile @open-settings="openSettings" />

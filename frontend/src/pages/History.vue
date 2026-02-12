@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <form class="mx-4 mb-4" @submit.prevent="searchHistory">
       <div class="relative">
@@ -23,7 +23,7 @@
       <Spinner />
     </div>
     <div v-else-if="content.length">
-      <ReleaseSection title="стория" :content="content" />
+      <ReleaseSection title="История" :content="content" />
       <button
         v-if="hasMore"
         class="btn-outline mt-4 w-full rounded-lg px-4 py-2 text-sm"

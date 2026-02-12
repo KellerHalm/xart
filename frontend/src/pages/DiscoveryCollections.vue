@@ -1,4 +1,4 @@
-<template>
+﻿<template>
   <div>
     <div class="mb-4 overflow-x-auto">
       <div class="flex flex-wrap gap-2">
