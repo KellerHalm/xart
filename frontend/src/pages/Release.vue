@@ -28,6 +28,24 @@
               @open-player="scrollToPlayer"
             />
           </section>
+          <div class="block lg:hidden">
+            <ReleaseInfoInfo
+              embedded
+              :country="release.country"
+              :aired-on-date="release.aired_on_date"
+              :year="release.year ? Number(release.year) : null"
+              :episodes="{ total: release.episodes_total, released: release.episodes_released }"
+              :season="release.season"
+              :status="release.status ? release.status.name : ui.announce"
+              :duration="release.duration"
+              :category="release.category?.name || ''"
+              :broadcast="release.broadcast"
+              :studio="release.studio"
+              :author="release.author"
+              :director="release.director"
+              :genres="release.genres"
+            />
+          </div>
 
           <div id="release-player-section" ref="playerSectionRef" class="scroll-mt-24">
             <ReleasePlayer v-if="showPlayer" :id="release.id" />
@@ -42,22 +60,24 @@
         </div>
 
         <aside class="flex min-w-0 flex-col gap-3">
-          <ReleaseInfoInfo
-            embedded
-            :country="release.country"
-            :aired-on-date="release.aired_on_date"
-            :year="release.year ? Number(release.year) : null"
-            :episodes="{ total: release.episodes_total, released: release.episodes_released }"
-            :season="release.season"
-            :status="release.status ? release.status.name : ui.announce"
-            :duration="release.duration"
-            :category="release.category?.name || ''"
-            :broadcast="release.broadcast"
-            :studio="release.studio"
-            :author="release.author"
-            :director="release.director"
-            :genres="release.genres"
-          />
+          <div class="hidden lg:block">
+            <ReleaseInfoInfo
+              embedded
+              :country="release.country"
+              :aired-on-date="release.aired_on_date"
+              :year="release.year ? Number(release.year) : null"
+              :episodes="{ total: release.episodes_total, released: release.episodes_released }"
+              :season="release.season"
+              :status="release.status ? release.status.name : ui.announce"
+              :duration="release.duration"
+              :category="release.category?.name || ''"
+              :broadcast="release.broadcast"
+              :studio="release.studio"
+              :author="release.author"
+              :director="release.director"
+              :genres="release.genres"
+            />
+          </div>
           <ReleaseInfoUserList
             :user-list="userList"
             :is-favorite="userFavorite"
