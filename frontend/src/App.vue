@@ -1,6 +1,6 @@
 <template>
   <LoadingScreen v-if="showLoadingScreen" @complete="showLoadingScreen = false" />
-  <div v-else class="min-h-screen overflow-x-hidden bg-[#1b1c1d] text-[color:var(--xart-text)] dark:bg-[#1b1c1d]">
+  <div v-else class="min-h-screen overflow-x-hidden bg-[color:var(--xart-bg)] text-[color:var(--xart-text)]">
     <div v-if="!preferences._hasHydrated && userStore.state === 'loading'" class="flex h-screen items-center justify-center">
       <Spinner size="lg" />
     </div>

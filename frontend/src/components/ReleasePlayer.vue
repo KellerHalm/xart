@@ -31,6 +31,7 @@
         <iframe
           v-if="selectedEpisode"
           :src="selectedEpisode.url"
+          loading="lazy"
           allowfullscreen
           class="h-full w-full rounded-md"
         ></iframe>

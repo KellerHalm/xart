@@ -1,61 +1,74 @@
 <template>
   <div class="rounded-xl border border-white/5 bg-[#222426] p-4 shadow">
-    <Swiper
-      v-if="normalizedImages.length"
-      :modules="[Navigation, Pagination, Autoplay]"
-      :space-between="8"
-      :slides-per-view="1"
-      :autoplay="autoplayConfig"
-      :pagination="{ clickable: true }"
-      :navigation="normalizedImages.length > 1"
-      :loop="normalizedImages.length > 1"
-      class="w-full"
-    >
-      <SwiperSlide
-        v-for="(image, index) in normalizedImages"
-        :key="`release-screenshot-${index}`"
-      >
-        <div class="relative aspect-video overflow-hidden rounded-lg bg-[#2a2d2f]">
-          <img
-            v-if="!brokenImages.has(index)"
-            :src="image"
-            alt="Скриншот релиза"
-            class="h-full w-full object-cover"
-            loading="lazy"
-            decoding="async"
-            referrerpolicy="no-referrer"
-            @error="markBroken(index)"
-          />
-          <div
-            v-else
-            class="flex h-full items-center justify-center text-xs uppercase tracking-wide text-gray-400"
-          >
-            Скриншот недоступен
-          </div>
+    <div v-if="normalizedImages.length" class="space-y-3">
+      <div class="relative overflow-hidden rounded-lg bg-[#2a2d2f]">
+        <img
+          v-if="!brokenImages.has(activeIndex)"
+          :src="normalizedImages[activeIndex]"
+          alt="Screenshot"
+          class="h-[220px] w-full object-cover sm:h-[260px] lg:h-[240px]"
+          loading="lazy"
+          decoding="async"
+          referrerpolicy="no-referrer"
+          @error="markBroken(activeIndex)"
+        />
+        <div
+          v-else
+          class="flex h-[220px] items-center justify-center text-xs uppercase tracking-wide text-gray-400 sm:h-[260px] lg:h-[240px]"
+        >
+          Screenshot unavailable
         </div>
-      </SwiperSlide>
-    </Swiper>
+
+        <button
+          v-if="normalizedImages.length > 1"
+          type="button"
+          class="absolute left-2 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-black/45 px-2 py-1 text-white hover:bg-black/60"
+          aria-label="Previous screenshot"
+          @click="prevImage"
+        >
+          ‹
+        </button>
+        <button
+          v-if="normalizedImages.length > 1"
+          type="button"
+          class="absolute right-2 top-1/2 -translate-y-1/2 rounded-full border border-white/20 bg-black/45 px-2 py-1 text-white hover:bg-black/60"
+          aria-label="Next screenshot"
+          @click="nextImage"
+        >
+          ›
+        </button>
+      </div>
+
+      <div v-if="normalizedImages.length > 1" class="flex flex-wrap gap-2">
+        <button
+          v-for="(_, index) in normalizedImages"
+          :key="`release-screenshot-dot-${index}`"
+          type="button"
+          class="h-2.5 w-2.5 rounded-full border border-white/30"
+          :class="index === activeIndex ? 'bg-[#d21c22] border-[#d21c22]' : 'bg-white/20'"
+          :aria-label="`Go to screenshot ${index + 1}`"
+          @click="activeIndex = index"
+        ></button>
+      </div>
+    </div>
+
     <div
       v-else
-      class="flex aspect-video items-center justify-center rounded-lg bg-[#2a2d2f] text-xs uppercase tracking-wide text-gray-400"
+      class="flex h-[220px] items-center justify-center rounded-lg bg-[#2a2d2f] text-xs uppercase tracking-wide text-gray-400 sm:h-[260px] lg:h-[240px]"
     >
-      Скриншоты недоступны
+      Screenshots unavailable
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from "vue";
+import { computed, ref, watch } from "vue";
 import { API_PREFIX } from "@/api/config";
-import { Swiper, SwiperSlide } from "swiper/vue";
-import { Navigation, Pagination, Autoplay } from "swiper/modules";
-import "swiper/css";
-import "swiper/css/navigation";
-import "swiper/css/pagination";
 
 const props = defineProps<{ images: string[] }>();
 
 const brokenImages = ref(new Set<number>());
+const activeIndex = ref(0);
 
 const normalizedImages = computed(() =>
   (props.images || [])
@@ -65,13 +78,34 @@ const normalizedImages = computed(() =>
     .map((image) => toImageUrl(image))
 );
 
-const autoplayConfig = computed(() =>
-  normalizedImages.value.length > 1
-    ? { delay: 4000, disableOnInteraction: false }
-    : false
+const imageProxyBase = resolveImageProxyBase();
+
+watch(
+  () => normalizedImages.value.length,
+  (length) => {
+    if (length === 0) {
+      activeIndex.value = 0;
+      brokenImages.value = new Set<number>();
+      return;
+    }
+    if (activeIndex.value >= length) {
+      activeIndex.value = 0;
+    }
+  },
+  { immediate: true }
 );
 
-const imageProxyBase = resolveImageProxyBase();
+function prevImage() {
+  const total = normalizedImages.value.length;
+  if (total <= 1) return;
+  activeIndex.value = (activeIndex.value - 1 + total) % total;
+}
+
+function nextImage() {
+  const total = normalizedImages.value.length;
+  if (total <= 1) return;
+  activeIndex.value = (activeIndex.value + 1) % total;
+}
 
 function markBroken(index: number) {
   brokenImages.value = new Set([...brokenImages.value, index]);

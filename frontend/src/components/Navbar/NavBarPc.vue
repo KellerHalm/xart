@@ -1,10 +1,10 @@
 ﻿<template>
-  <header class="fixed top-0 left-0 right-0 z-50 hidden h-16 w-full bg-[#1b1c1d]/90 text-white backdrop-blur-lg lg:block">
+  <header :class="headerClass" class="fixed top-0 left-0 right-0 z-50 hidden h-16 w-full lg:block">
     <div class="container mx-auto flex h-full items-center gap-4 px-3">
       <div class="flex items-center gap-3">
         <button
           type="button"
-          class="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-200 hover:bg-white/10"
+          :class="topMenuBtnClass"
           :aria-expanded="megaOpen"
           aria-controls="mega-panel"
           aria-label="Открыть меню"
@@ -12,9 +12,11 @@
         >
           <span class="iconify mdi--menu h-5 w-5"></span>
         </button>
-        <router-link to="/" class="flex items-center gap-2 text-white">
+        <router-link to="/" class="flex items-center gap-2" :class="isDark ? 'text-white' : 'text-[#252525]'">
           <img src="/images/icons/xart.svg" alt="Xart" class="h-8 w-8" />
-          <span class="text-lg font-semibold tracking-[0.3em]">ANIXART</span>
+          <span class="text-lg font-semibold tracking-[0.3em]">
+            <span :class="isDark ? 'text-white' : 'text-white drop-shadow-[0_0_1px_rgba(0,0,0,0.85)]'">X</span><span class="text-[#e04545]">ART</span>
+          </span>
         </router-link>
       </div>
 
@@ -30,7 +32,7 @@
           />
           <button
             type="button"
-            class="absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-gray-200 hover:bg-white/20"
+            :class="searchSubmitBtnClass"
             aria-label="Найти"
             @click="submitSearch"
           >
@@ -59,7 +61,7 @@
         <div class="relative">
           <button
             type="button"
-            class="flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white/5"
+            :class="profileBtnClass"
             aria-label="Профиль"
             @click="toggleUserMenu"
           >
@@ -71,18 +73,21 @@
           </button>
           <div
             v-if="menuOpen"
-            class="absolute right-0 mt-3 w-48 rounded-lg border border-white/10 bg-[#1f2022]/95 p-2 text-sm shadow-lg"
+            class="absolute right-0 mt-3 w-48 rounded-lg border p-2 text-sm shadow-lg"
+            :class="isDark ? 'border-white/10 bg-[#1f2022]/95 text-gray-100' : 'border-[#e04545]/30 bg-white text-[#1f2937]'"
           >
             <button
               v-if="userStore.isAuth"
-              class="flex w-full items-center gap-2 rounded-md px-2 py-2 hover:bg-white/10"
+              class="flex w-full items-center gap-2 rounded-md px-2 py-2"
+              :class="isDark ? 'hover:bg-white/10' : 'hover:bg-[#fff2f2]'"
               @click="goToProfile"
             >
               <span class="iconify mdi--user h-4 w-4"></span>
               Профиль
             </button>
             <button
-              class="flex w-full items-center gap-2 rounded-md px-2 py-2 hover:bg-white/10"
+              class="flex w-full items-center gap-2 rounded-md px-2 py-2"
+              :class="isDark ? 'hover:bg-white/10' : 'hover:bg-[#fff2f2]'"
               @click="emit('open-settings')"
             >
               <span class="iconify mdi--settings h-4 w-4"></span>
@@ -98,7 +103,8 @@
             </button>
             <button
               v-else
-              class="flex w-full items-center gap-2 rounded-md px-2 py-2 hover:bg-white/10"
+              class="flex w-full items-center gap-2 rounded-md px-2 py-2"
+              :class="isDark ? 'hover:bg-white/10' : 'hover:bg-[#fff2f2]'"
               @click="goToLogin"
             >
               <span class="iconify mdi--login h-4 w-4"></span>
@@ -109,11 +115,14 @@
       </div>
     </div>
 
-    <div v-if="megaOpen" class="fixed inset-0 z-40" @click="closeMega">
+    <div v-if="megaOpen" class="fixed inset-0 z-40" :class="isDark ? 'bg-black/25' : 'bg-black/10'" @click="closeMega">
       <div id="mega-panel" class="absolute inset-x-0 top-16" @click.stop>
         <div class="container mx-auto px-3 pb-6">
           <div class="grid gap-4 lg:grid-cols-[1.2fr_1fr]">
-            <div class="rounded-2xl border border-white/10 bg-[#1f2022]/95 p-6 shadow-2xl backdrop-blur-xl">
+            <div
+              class="rounded-2xl border p-6 shadow-2xl backdrop-blur-xl"
+              :class="isDark ? 'border-white/10 bg-[#1f2022]/95 text-gray-100' : 'border-[#e04545]/25 bg-white text-[#1f2937] shadow-[0_20px_45px_-30px_rgba(185,28,28,0.45)]'"
+            >
               <div class="space-y-6">
                 <div>
                   <p class="text-xs uppercase tracking-[0.2em] text-gray-400">Меню</p>
@@ -122,8 +131,13 @@
                       v-for="item in visibleMenuItems"
                       :key="item.label"
                       type="button"
-                      class="flex items-center justify-between rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-left text-gray-200 transition hover:bg-white/10"
-                      :class="item.disabled ? 'opacity-40 cursor-not-allowed' : ''"
+                      class="flex items-center justify-between rounded-lg border px-3 py-2 text-left transition"
+                      :class="[
+                        item.disabled ? 'opacity-40 cursor-not-allowed' : '',
+                        isDark
+                          ? 'border-white/10 bg-white/5 text-gray-200 hover:bg-white/10'
+                          : 'border-[#e04545]/20 bg-[#fff7f7] text-[#1f2937] hover:bg-[#ffecec]',
+                      ]"
                       @click="handleMenuItem(item)"
                     >
                       <span>{{ item.label }}</span>
@@ -148,7 +162,10 @@
               </div>
             </div>
 
-            <div class="rounded-2xl border border-white/10 bg-[#1f2022]/95 p-6 shadow-2xl backdrop-blur-xl">
+            <div
+              class="rounded-2xl border p-6 shadow-2xl backdrop-blur-xl"
+              :class="isDark ? 'border-white/10 bg-[#1f2022]/95 text-gray-100' : 'border-[#e04545]/25 bg-white text-[#1f2937] shadow-[0_20px_45px_-30px_rgba(185,28,28,0.45)]'"
+            >
               <div class="space-y-6">
                 <div>
                   <p class="text-xs uppercase tracking-[0.2em] text-gray-400">Статус</p>
@@ -231,8 +248,33 @@ const preferencesStore = usePreferencesStore();
 const router = useRouter();
 const route = useRoute();
 
+const isDark = computed(() => preferencesStore.flags.theme === "dark");
 const fallbackAvatar = "https://s.anixmirai.com/avatars/no_avatar.jpg";
-const iconBtnClass = "flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-200 hover:bg-white/10";
+const headerClass = computed(() =>
+  isDark.value
+    ? "bg-[#1b1c1d]/90 text-white backdrop-blur-lg"
+    : "border-b-2 border-[#e04545]/70 bg-white/95 text-[#252525] backdrop-blur-lg"
+);
+const topMenuBtnClass = computed(() =>
+  isDark.value
+    ? "flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-200 hover:bg-white/10"
+    : "flex h-10 w-10 items-center justify-center rounded-full border border-[#e04545]/40 bg-white text-[#444] hover:bg-[#fff5f5]"
+);
+const iconBtnClass = computed(() =>
+  isDark.value
+    ? "flex h-9 w-9 items-center justify-center rounded-full border border-white/10 bg-white/5 text-gray-200 hover:bg-white/10"
+    : "flex h-9 w-9 items-center justify-center rounded-full border border-[#e04545]/40 bg-white text-[#555] hover:bg-[#fff5f5]"
+);
+const searchSubmitBtnClass = computed(() =>
+  isDark.value
+    ? "absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-white/10 text-gray-200 hover:bg-white/20"
+    : "absolute right-2 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-full bg-[#fff0f0] text-[#c23838] hover:bg-[#ffe3e3]"
+);
+const profileBtnClass = computed(() =>
+  isDark.value
+    ? "flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-white/5"
+    : "flex h-10 w-10 items-center justify-center overflow-hidden rounded-full border border-[#e04545]/40 bg-white"
+);
 
 const menuOpen = ref(false);
 const megaOpen = ref(false);
@@ -341,8 +383,6 @@ const visibleQuickLinks = computed(() =>
   quickLinks.filter((item) => !item.auth || userStore.isAuth)
 );
 
-const isDark = computed(() => preferencesStore.flags.theme === "dark");
-
 function toggleTheme() {
   preferencesStore.setFlags({ theme: isDark.value ? "light" : "dark" });
 }
@@ -353,7 +393,10 @@ function isActive(path: string) {
 }
 
 function iconLinkClass(path: string) {
-  return `${iconBtnClass} ${isActive(path) ? "bg-[#2a2d2f] text-[#f1b9b9] border-white/30" : ""}`;
+  const activeClass = isDark.value
+    ? "bg-[#2a2d2f] text-[#f1b9b9] border-white/30"
+    : "bg-[#ffecec] text-[#be2c2c] border-[#e04545]/60";
+  return `${iconBtnClass.value} ${isActive(path) ? activeClass : ""}`;
 }
 
 function toggleUserMenu() {

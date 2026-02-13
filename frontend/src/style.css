@@ -8,8 +8,11 @@
   --xart-bg: #1b1d1f;
   --xart-bg-rgb: 27, 29, 31;
   --xart-panel: #222526;
+  --xart-panel-rgb: 34, 37, 38;
   --xart-panel-2: #2b2e30;
+  --xart-panel-2-rgb: 43, 46, 48;
   --xart-panel-3: #1f2123;
+  --xart-panel-3-rgb: 31, 33, 35;
   --xart-text: #e6e6e6;
   --xart-muted: #9aa0a6;
   --xart-accent: #d21c22;
@@ -25,8 +28,11 @@
   --xart-bg: #f8f9fa;
   --xart-bg-rgb: 248, 249, 250;
   --xart-panel: #ffffff;
+  --xart-panel-rgb: 255, 255, 255;
   --xart-panel-2: #f1f3f5;
+  --xart-panel-2-rgb: 241, 243, 245;
   --xart-panel-3: #f8f9fa;
+  --xart-panel-3-rgb: 248, 249, 250;
   --xart-text: #212529;
   --xart-muted: #6c757d;
   --xart-accent: #d21c22;
@@ -302,15 +308,27 @@ body {
 .dark .text-gray-500 { color: #8c9197 !important; }
 
 /* Light theme token remap */
-.light .bg-slate-800 { background-color: #374151 !important; }
-.light .bg-slate-900 { background-color: #1f2937 !important; }
-.light .bg-gray-700 { background-color: #4b5563 !important; }
-.light .bg-gray-800 { background-color: #374151 !important; }
-.light .border-gray-700 { border-color: #4b5563 !important; }
-.light .border-gray-600 { border-color: #6b7280 !important; }
+.light .bg-slate-800 { background-color: #f3f4f6 !important; }
+.light .bg-slate-900 { background-color: #e5e7eb !important; }
+.light .bg-slate-900\/95 { background-color: rgba(229, 231, 235, 0.95) !important; }
+.light .bg-gray-700 { background-color: #e5e7eb !important; }
+.light .bg-gray-800 { background-color: #d1d5db !important; }
+.light .border-gray-700 { border-color: #d1d5db !important; }
+.light .border-gray-600 { border-color: #cbd5e1 !important; }
+.light .text-gray-100 { color: #111827 !important; }
+.light .text-gray-200 { color: #1f2937 !important; }
 .light .text-gray-300 { color: #374151 !important; }
 .light .text-gray-400 { color: #4b5563 !important; }
 .light .text-gray-500 { color: #6b7280 !important; }
+.light .bg-white\/5 { background-color: rgba(15, 23, 42, 0.04) !important; }
+.light .bg-white\/10 { background-color: rgba(15, 23, 42, 0.06) !important; }
+.light .bg-white\/15 { background-color: rgba(15, 23, 42, 0.09) !important; }
+.light .bg-white\/20 { background-color: rgba(15, 23, 42, 0.12) !important; }
+.light .border-white\/5 { border-color: rgba(15, 23, 42, 0.1) !important; }
+.light .border-white\/10 { border-color: rgba(15, 23, 42, 0.14) !important; }
+.light .border-white\/15 { border-color: rgba(15, 23, 42, 0.18) !important; }
+.light .border-white\/20 { border-color: rgba(15, 23, 42, 0.22) !important; }
+.light .hover\:text-white:hover { color: var(--xart-accent) !important; }
 
 /* Xart palette overrides */
 .bg-black\/90 { background-color: rgba(var(--xart-bg-rgb), 0.92) !important; }
@@ -320,8 +338,14 @@ body {
 .bg-\[\#222426\] { background-color: var(--xart-panel) !important; }
 .bg-\[\#2a2d2f\] { background-color: var(--xart-panel-2) !important; }
 .bg-\[\#1f2022\] { background-color: var(--xart-panel-3) !important; }
-.bg-\[\#35393c\] { background-color: #2f3234 !important; }
-.bg-\[\#3a3d40\] { background-color: #333638 !important; }
+.bg-\[\#14181d\] { background-color: var(--xart-panel-2) !important; }
+.bg-\[\#222426\]\/90 { background-color: rgba(var(--xart-panel-rgb), 0.9) !important; }
+.bg-\[\#222426\]\/60 { background-color: rgba(var(--xart-panel-rgb), 0.6) !important; }
+.bg-\[\#1f2022\]\/95 { background-color: rgba(var(--xart-panel-3-rgb), 0.95) !important; }
+.bg-\[\#1f2022\]\/70 { background-color: rgba(var(--xart-panel-3-rgb), 0.7) !important; }
+.bg-\[\#1b1c1d\]\/90 { background-color: rgba(var(--xart-bg-rgb), 0.9) !important; }
+.bg-\[\#35393c\] { background-color: var(--xart-panel-2) !important; }
+.bg-\[\#3a3d40\] { background-color: var(--xart-panel-2) !important; }
 .bg-\[\#2a1b1b\] { background-color: var(--xart-accent-bg) !important; }
 
 .bg-\[\#e04545\] { background-color: var(--xart-accent) !important; }
@@ -365,13 +389,24 @@ body {
 .group-hover\:text-blue-300:hover { color: var(--xart-accent-soft) !important; }
 
 /* Плавные анимации и переходы */
-* {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+a,
+button,
+input,
+select,
+textarea,
+[role="button"] {
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    border-color 0.2s ease,
+    opacity 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 /* Анимации для карточек */
 .card-hover {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   transform: translateY(0);
 }
 
@@ -405,7 +440,12 @@ body {
 
 /* Анимации для кнопок */
 .btn-primary {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
 }
@@ -428,7 +468,7 @@ body {
 /* Анимации для навигации */
 .nav-link {
   position: relative;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: color 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .nav-link::after {
@@ -457,7 +497,7 @@ body {
 
 /* Плавные переходы для списков */
 .list-item {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   opacity: 0;
   transform: translateY(20px);
 }
@@ -629,7 +669,7 @@ body {
 .anime-card {
   position: relative;
   overflow: hidden;
-  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .anime-card::before {
@@ -828,7 +868,12 @@ body {
 .player-button {
   position: relative;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .player-button::before {
@@ -878,7 +923,11 @@ body {
   background: rgba(27, 29, 31, 0.95);
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .player-menu:hover {
@@ -888,7 +937,11 @@ body {
 
 /* Анимации для элементов управления */
 .control-element {
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition:
+    transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    box-shadow 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    border-color 0.3s cubic-bezier(0.4, 0, 0.2, 1),
+    background-color 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   backdrop-filter: blur(10px);
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
@@ -930,6 +983,26 @@ body {
   20%, 40%, 60%, 80% {
     transform: translateX(2px);
   }
+}
+
+/* Release page anti-artifact fallback for desktop GPU/compositor glitches */
+.release-route [class*="backdrop-blur"] {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+
+.release-route .release-page {
+  isolation: isolate;
+  overflow-x: clip;
+}
+
+.release-route .release-page .poster-glow::after {
+  display: none !important;
+}
+
+.release-route .release-page img,
+.release-route .release-page iframe {
+  backface-visibility: hidden;
 }
 
 .markdown h1 {

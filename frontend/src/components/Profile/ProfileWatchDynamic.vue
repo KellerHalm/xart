@@ -1,11 +1,12 @@
 ﻿<template>
   <div class="card-surface rounded-2xl p-5 sm:p-6">
     <h1 class="section-title text-xl">Динамика просмотра серий</h1>
-    <div class="relative mt-4 h-44 w-full">
+    <div class="relative mt-4 h-56 w-full">
       <svg
         v-if="points.length > 1"
         ref="svgRef"
         viewBox="0 0 100 100"
+        preserveAspectRatio="none"
         class="h-full w-full cursor-crosshair"
         @mousemove="handleMove"
         @mouseleave="handleLeave"
@@ -14,22 +15,23 @@
       >
         <defs>
           <linearGradient id="watchArea" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stop-color="#2f7df6" stop-opacity="0.45" />
-            <stop offset="100%" stop-color="#2f7df6" stop-opacity="0" />
+            <stop offset="0%" stop-color="#d21c22" stop-opacity="0.42" />
+            <stop offset="100%" stop-color="#d21c22" stop-opacity="0" />
           </linearGradient>
         </defs>
         <g stroke="rgba(255,255,255,0.1)" stroke-dasharray="2 4">
-          <line x1="0" y1="20" x2="100" y2="20" />
-          <line x1="0" y1="40" x2="100" y2="40" />
-          <line x1="0" y1="60" x2="100" y2="60" />
-          <line x1="0" y1="80" x2="100" y2="80" />
+          <line x1="4" y1="18" x2="96" y2="18" />
+          <line x1="4" y1="34" x2="96" y2="34" />
+          <line x1="4" y1="50" x2="96" y2="50" />
+          <line x1="4" y1="66" x2="96" y2="66" />
+          <line x1="4" y1="82" x2="96" y2="82" />
         </g>
         <path v-if="areaPath" :d="areaPath" fill="url(#watchArea)" />
         <path
           v-if="linePath"
           :d="linePath"
           fill="none"
-          stroke="#2f7df6"
+          stroke="#d21c22"
           stroke-width="3"
           stroke-linecap="round"
           stroke-linejoin="round"
@@ -37,14 +39,14 @@
         <template v-if="activePoint">
           <line
             :x1="activePoint.x"
-            y1="8"
+            y1="6"
             :x2="activePoint.x"
-            y2="96"
+            y2="92"
             stroke="rgba(255,255,255,0.2)"
             stroke-width="1"
           />
           <circle :cx="activePoint.x" :cy="activePoint.y" r="3.5" fill="#ffffff" />
-          <circle :cx="activePoint.x" :cy="activePoint.y" r="7" fill="rgba(47,125,246,0.35)" />
+          <circle :cx="activePoint.x" :cy="activePoint.y" r="7" fill="rgba(210,28,34,0.35)" />
         </template>
       </svg>
       <div v-else class="flex h-full items-center justify-center text-sm text-gray-500">
@@ -60,7 +62,7 @@
           class="-translate-x-1/2 -translate-y-[120%] rounded-lg border border-white/10 bg-[#14181d] px-3 py-2 text-center shadow-lg"
         >
           <p class="text-xs text-gray-300">{{ activePoint.label }}</p>
-          <p class="text-sm font-semibold text-white">{{ activePoint.count }} серий</p>
+          <p class="text-sm font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">{{ activePoint.count }} серий</p>
         </div>
       </div>
     </div>
@@ -69,8 +71,11 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { usePreferencesStore } from "@/store/preferences";
 
 const props = defineProps<{ watchDynamic: any[] }>();
+const preferencesStore = usePreferencesStore();
+const isDark = computed(() => preferencesStore.flags.theme === "dark");
 
 const svgRef = ref<SVGSVGElement | null>(null);
 const activeIndex = ref<number | null>(null);
@@ -84,10 +89,12 @@ const points = computed(() => {
   if (data.length < 2) return [];
   const values = data.map((item: any) => Number(item?.count ?? item?.value ?? 0));
   const max = Math.max(...values, 1);
+  const min = Math.min(...values, 0);
   return data.map((item: any, index: number) => {
     const count = Number(item?.count ?? item?.value ?? 0);
-    const x = 6 + (index / (data.length - 1)) * 88;
-    const y = 90 - (count / max) * 60;
+    const x = 4 + (index / (data.length - 1)) * 92;
+    const ratio = max === min ? 0.5 : (count - min) / (max - min);
+    const y = 78 - ratio * 60;
     return {
       x,
       y,
@@ -102,7 +109,7 @@ const areaPath = computed(() => {
   if (!points.value.length || !linePath.value) return "";
   const first = points.value[0]!;
   const last = points.value[points.value.length - 1]!;
-  return `${linePath.value} L ${last.x} 100 L ${first.x} 100 Z`;
+  return `${linePath.value} L ${last.x} 92 L ${first.x} 92 Z`;
 });
 
 const activePoint = computed(() => {

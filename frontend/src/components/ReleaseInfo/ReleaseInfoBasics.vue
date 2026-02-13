@@ -1,60 +1,147 @@
 <template>
-  <div class="h-full rounded-xl border border-white/5 bg-[#222426] p-4 shadow">
-    <div class="flex h-full flex-col gap-4 lg:grid lg:grid-cols-[1fr_2fr] lg:items-start">
-      <div class="flex flex-col gap-2">
-        <div class="relative flex items-center justify-center overflow-hidden rounded-lg poster-glow">
-          <Poster :image="image" className="z-10 sm:scale-95 lg:scale-100" />
-          <Poster
-            :image="image"
-            className="absolute left-0 top-0 w-full scale-125 opacity-75 blur-xl brightness-75"
-          />
+  <div :class="wrapperClass">
+    <div class="grid grid-cols-1 gap-4 lg:grid-cols-[220px_minmax(0,1fr)]">
+      <aside class="flex flex-col gap-3">
+        <div class="relative overflow-hidden rounded-xl border border-white/10 bg-black/25">
+          <Poster :image="image" className="h-full w-full object-cover" loading="eager" />
+          <div class="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+          <div
+            v-if="episodesLabel"
+            class="absolute right-2 top-2 rounded-full border border-white/15 bg-black/60 px-2 py-1 text-xs font-semibold text-white"
+          >
+            {{ episodesLabel }}
+          </div>
         </div>
+
+        <button
+          v-if="showPlayerButton"
+          type="button"
+          class="w-full rounded-xl bg-[#d21c22] px-4 py-3 text-sm font-semibold text-white hover:bg-[#b01218]"
+          @click="emit('open-player')"
+        >
+          Смотреть онлайн
+        </button>
+
         <ReleaseInfoStreaming :release-id="releaseId" />
-      </div>
-      <div class="flex max-w-2xl flex-col gap-2 text-sm md:text-base">
-        <div class="flex flex-col gap-1">
-          <p class="title-main text-xl md:text-2xl">
-            {{ title.ru }}
-          </p>
-          <p class="title-sub md:text-sm">
+      </aside>
+
+      <div class="min-w-0 space-y-3">
+        <div class="space-y-1">
+          <h1 class="text-2xl font-extrabold leading-tight md:text-4xl" :class="isDark ? 'text-white' : 'text-gray-900'">
+            {{ title.ru || "Без названия" }}
+          </h1>
+          <p v-if="title.original" class="text-sm uppercase tracking-[0.08em] text-gray-400">
             {{ title.original }}
           </p>
         </div>
+
+        <div class="flex flex-wrap items-center gap-2 text-sm">
+          <span
+            v-if="status"
+            class="rounded-full border px-3 py-1" :class="isDark ? 'border-white/15 bg-white/5 text-gray-200' : 'border-black/10 bg-black/5 text-gray-700'"
+          >
+            {{ status }}
+          </span>
+          <span
+            v-for="genre in genresPreview"
+            :key="genre"
+            class="rounded-full border border-[#d21c22]/50 bg-[#d21c22]/10 px-3 py-1 text-[#f1b9b9]"
+          >
+            {{ genre }}
+          </span>
+        </div>
+
         <div
           v-if="note"
-          class="rounded-br-md rounded-tr-md border-l-4 border-[#e04545] bg-[#2a1b1b] py-2 text-gray-200"
+          class="rounded-xl border border-[#d21c22]/35 px-3 py-2 text-sm" :class="isDark ? 'bg-[#2a1718] text-gray-100' : 'bg-[rgba(210,28,34,0.08)] text-gray-800'"
         >
-          <div class="ml-2" v-html="note"></div>
+          <div v-html="note"></div>
         </div>
-        <p
-          class="overflow-y-hidden transition-[max-height] md:max-h-full"
-          :style="{ maxHeight: isFullDescription ? '1000px' : '80px' }"
-        >
-          {{ description }}
-        </p>
-        <button
-          class="rounded-md border border-white/10 px-3 py-1 text-sm text-gray-200 hover:bg-white/5 md:hidden"
-          @click="isFullDescription = !isFullDescription"
-        >
-          {{ isFullDescription ? "Скрыть" : "Показать полностью" }}
-        </button>
+
+        <div class="text-sm leading-7 md:text-base" :class="isDark ? 'text-gray-200' : 'text-gray-700'">
+          <p
+            class="overflow-hidden transition-[max-height]"
+            :style="{ maxHeight: isFullDescription ? '1000px' : '220px' }"
+          >
+            {{ description || "Описание отсутствует." }}
+          </p>
+          <button
+            v-if="(description || '').length > 360"
+            type="button"
+            class="mt-2 text-sm font-semibold text-[#d21c22] hover:text-[#f1b9b9]"
+            @click="isFullDescription = !isFullDescription"
+          >
+            {{ isFullDescription ? "Свернуть" : "Показать полностью" }}
+          </button>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 import Poster from "@/components/ReleasePoster/Poster.vue";
 import ReleaseInfoStreaming from "@/components/ReleaseInfo/ReleaseInfoStreaming.vue";
+import { usePreferencesStore } from "@/store/preferences";
 
-const props = defineProps<{
-  releaseId: number;
-  image: string;
-  title: { ru: string; original: string };
-  note: string | null;
-  description: string;
+const props = withDefaults(
+  defineProps<{
+    releaseId: number;
+    image: string;
+    title: { ru: string; original: string };
+    note: string | null;
+    description?: string | null;
+    episodesReleased?: number | null;
+    episodesTotal?: number | null;
+    status?: string;
+    genres?: string;
+    embedded?: boolean;
+    showPlayerButton?: boolean;
+  }>(),
+  {
+    description: "",
+    episodesReleased: null,
+    episodesTotal: null,
+    status: "",
+    genres: "",
+    embedded: false,
+    showPlayerButton: false,
+  }
+);
+
+const emit = defineEmits<{
+  (e: "open-player"): void;
 }>();
 
 const isFullDescription = ref(false);
+const preferencesStore = usePreferencesStore();
+const isDark = computed(() => preferencesStore.flags.theme === "dark");
+
+const wrapperClass = computed(() =>
+  props.embedded
+    ? (isDark.value
+      ? "rounded-xl border border-white/10 bg-[#222426]/60 p-4"
+      : "rounded-xl border border-black/10 bg-white/90 p-4")
+    : (isDark.value
+      ? "h-full rounded-xl border border-white/5 bg-[#222426] p-4 shadow"
+      : "h-full rounded-xl border border-black/10 bg-white p-4 shadow")
+);
+
+const genresPreview = computed(() =>
+  (props.genres || "")
+    .split(",")
+    .map((item) => item.trim())
+    .filter(Boolean)
+    .slice(0, 4)
+);
+
+const episodesLabel = computed(() => {
+  const released = props.episodesReleased;
+  const total = props.episodesTotal;
+  if (released === null && total === null) return "";
+  if (released !== null && total !== null) return `${released}/${total} эп.`;
+  if (released !== null) return `${released} эп.`;
+  return `${total} эп.`;
+});
 </script>

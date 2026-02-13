@@ -1,32 +1,32 @@
 import { createRouter, createWebHistory } from "vue-router";
 import type { RouteRecordRaw } from "vue-router";
 
-import IndexPage from "@/pages/Index.vue";
-import IndexCategoryPage from "@/pages/IndexCategory.vue";
-import SearchPage from "@/pages/Search.vue";
-import LoginPage from "@/pages/Login.vue";
-import AboutPage from "@/pages/About.vue";
-import PlaceholderPage from "@/pages/PlaceholderPage.vue";
-import ReleasePage from "@/pages/Release.vue";
-import BookmarksPage from "@/pages/Bookmarks.vue";
-import BookmarksCategoryPage from "@/pages/BookmarksCategory.vue";
-import FavoritesPage from "@/pages/Favorites.vue";
-import HistoryPage from "@/pages/History.vue";
-import CollectionsPage from "@/pages/Collections.vue";
-import CollectionsFavoritesPage from "@/pages/CollectionsFavorites.vue";
-import CollectionViewPage from "@/pages/CollectionView.vue";
-import ProfilePage from "@/pages/Profile.vue";
-import CollectionsCreatePage from "@/pages/CollectionsCreate.vue";
-import ProfileBookmarksPage from "@/pages/ProfileBookmarks.vue";
-import ProfileBookmarksCategoryPage from "@/pages/ProfileBookmarksCategory.vue";
-import ProfileCollectionsPage from "@/pages/ProfileCollections.vue";
-import ReleaseCollectionsPage from "@/pages/ReleaseCollections.vue";
-import RelatedPage from "@/pages/Related.vue";
-import DiscoveryPage from "@/pages/Discovery.vue";
-import DiscoveryCollectionsPage from "@/pages/DiscoveryCollections.vue";
-import DiscoveryRecommendationsPage from "@/pages/DiscoveryRecommendations.vue";
-import DiscoveryWatchingPage from "@/pages/DiscoveryWatching.vue";
-import DiscoveryFilterPage from "@/pages/DiscoveryFilter.vue";
+const IndexPage = () => import("@/pages/Index.vue");
+const IndexCategoryPage = () => import("@/pages/IndexCategory.vue");
+const SearchPage = () => import("@/pages/Search.vue");
+const LoginPage = () => import("@/pages/Login.vue");
+const AboutPage = () => import("@/pages/About.vue");
+const PlaceholderPage = () => import("@/pages/PlaceholderPage.vue");
+const ReleasePage = () => import("@/pages/Release.vue");
+const BookmarksPage = () => import("@/pages/Bookmarks.vue");
+const BookmarksCategoryPage = () => import("@/pages/BookmarksCategory.vue");
+const FavoritesPage = () => import("@/pages/Favorites.vue");
+const HistoryPage = () => import("@/pages/History.vue");
+const CollectionsPage = () => import("@/pages/Collections.vue");
+const CollectionsFavoritesPage = () => import("@/pages/CollectionsFavorites.vue");
+const CollectionViewPage = () => import("@/pages/CollectionView.vue");
+const ProfilePage = () => import("@/pages/Profile.vue");
+const CollectionsCreatePage = () => import("@/pages/CollectionsCreate.vue");
+const ProfileBookmarksPage = () => import("@/pages/ProfileBookmarks.vue");
+const ProfileBookmarksCategoryPage = () => import("@/pages/ProfileBookmarksCategory.vue");
+const ProfileCollectionsPage = () => import("@/pages/ProfileCollections.vue");
+const ReleaseCollectionsPage = () => import("@/pages/ReleaseCollections.vue");
+const RelatedPage = () => import("@/pages/Related.vue");
+const DiscoveryPage = () => import("@/pages/Discovery.vue");
+const DiscoveryCollectionsPage = () => import("@/pages/DiscoveryCollections.vue");
+const DiscoveryRecommendationsPage = () => import("@/pages/DiscoveryRecommendations.vue");
+const DiscoveryWatchingPage = () => import("@/pages/DiscoveryWatching.vue");
+const DiscoveryFilterPage = () => import("@/pages/DiscoveryFilter.vue");
 
 const routes: RouteRecordRaw[] = [
   { path: "/", name: "home", component: IndexPage },

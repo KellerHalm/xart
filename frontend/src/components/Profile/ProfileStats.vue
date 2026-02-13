@@ -14,84 +14,104 @@
             v-for="(segment, index) in segments"
             :key="segment.label"
             type="button"
-            class="group flex items-center gap-2 text-left text-sm font-medium text-gray-300 transition"
-            :class="activeIndex === index ? 'text-white' : ''"
-            @mouseenter="activeIndex = index"
-            @mouseleave="activeIndex = null"
-            @focus="activeIndex = index"
-            @blur="activeIndex = null"
+            class="group flex items-center gap-2 rounded-lg px-1.5 py-1 text-left text-sm font-medium transition"
+            :class="[
+              isDark ? 'text-gray-300' : 'text-gray-700',
+              resolvedActiveIndex === index ? (isDark ? 'text-white' : 'text-gray-900') : '',
+            ]"
+            @mouseenter="setHover(index)"
+            @mouseleave="setHover(null)"
+            @focus="setHover(index)"
+            @blur="setHover(null)"
+            @click="toggleSegment(index)"
           >
             <span
               class="h-3.5 w-3.5 flex-shrink-0 rounded-sm shadow-[0_0_10px_rgba(0,0,0,0.4)]"
               :style="{ backgroundColor: segment.color }"
             ></span>
             <span class="whitespace-nowrap">{{ segment.label }}</span>
-            <span class="font-semibold text-white">{{ segment.value }}</span>
+            <span
+              class="ml-auto rounded-md px-2 py-0.5 font-semibold"
+              :class="isDark ? 'bg-white/5 text-white' : 'bg-black/5 text-gray-900'"
+            >{{ segment.value }}</span>
           </button>
         </div>
 
-        <div class="space-y-1 text-sm text-gray-300">
-          <p>
-            Жанры:
-            <span v-if="preferredGenres.length > 0">
-              <span v-for="(item, index) in preferredGenres" :key="`preferred-genres-${item.name}`">
-                <span v-if="index > 0">, </span>
+        <div class="space-y-2 text-sm leading-relaxed" :class="isDark ? 'text-gray-300' : 'text-gray-700'">
+          <p class="flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
+            <span>Жанры:</span>
+            <span v-if="preferredGenres.length > 0" class="inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+              <span v-for="(item, index) in preferredGenres" :key="`preferred-genres-${item.name}`" class="inline-flex items-center gap-1">
                 <ReleaseInfoSearchLink :title="item.name" searchBy="tag" />
-                <span class="text-xs text-gray-400"> {{ item.percentage }}%</span>
+                <span class="text-xs text-gray-400">{{ item.percentage }}%</span>
+                <span v-if="index < preferredGenres.length - 1" class="text-gray-500">·</span>
               </span>
             </span>
+            <span v-else class="text-gray-500">—</span>
           </p>
-          <p>
-            Аудитория:
-            <span v-if="preferredAudiences.length > 0">
-              <span v-for="(item, index) in preferredAudiences" :key="`preferred-audiences-${item.name}`">
-                <span v-if="index > 0">, </span>
+          <p class="flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
+            <span>Аудитория:</span>
+            <span v-if="preferredAudiences.length > 0" class="inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+              <span v-for="(item, index) in preferredAudiences" :key="`preferred-audiences-${item.name}`" class="inline-flex items-center gap-1">
                 <ReleaseInfoSearchLink :title="item.name" searchBy="tag" />
-                <span class="text-xs text-gray-400"> {{ item.percentage }}%</span>
+                <span class="text-xs text-gray-400">{{ item.percentage }}%</span>
+                <span v-if="index < preferredAudiences.length - 1" class="text-gray-500">·</span>
               </span>
             </span>
+            <span v-else class="text-gray-500">—</span>
           </p>
-          <p>
-            Тематика:
-            <span v-if="preferredThemes.length > 0">
-              <span v-for="(item, index) in preferredThemes" :key="`preferred-themes-${item.name}`">
-                <span v-if="index > 0">, </span>
+          <p class="flex flex-wrap items-baseline gap-x-1.5 gap-y-1">
+            <span>Тематика:</span>
+            <span v-if="preferredThemes.length > 0" class="inline-flex flex-wrap items-center gap-x-1.5 gap-y-0.5">
+              <span v-for="(item, index) in preferredThemes" :key="`preferred-themes-${item.name}`" class="inline-flex items-center gap-1">
                 <ReleaseInfoSearchLink :title="item.name" searchBy="tag" />
-                <span class="text-xs text-gray-400"> {{ item.percentage }}%</span>
+                <span class="text-xs text-gray-400">{{ item.percentage }}%</span>
+                <span v-if="index < preferredThemes.length - 1" class="text-gray-500">·</span>
               </span>
             </span>
+            <span v-else class="text-gray-500">—</span>
           </p>
 
-          <p>
-            Просмотрено серий: <span class="font-semibold text-white">{{ watchedCount }}</span>
+          <p class="flex items-baseline gap-2">
+            <span>Просмотрено серий:</span>
+            <span class="font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">{{ watchedCount }}</span>
           </p>
-          <p>
-            Время просмотра: <span class="font-semibold text-white">~{{ minutesToTime(watchedTime) }}</span>
+          <p class="flex items-baseline gap-2">
+            <span>Время просмотра:</span>
+            <span class="font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">~{{ minutesToTime(watchedTime) }}</span>
           </p>
         </div>
       </div>
 
       <div class="relative h-48 w-48 flex-shrink-0 sm:h-56 sm:w-56">
         <svg viewBox="0 0 200 200" class="h-full w-full">
-          <circle cx="100" cy="100" r="70" stroke="rgba(255,255,255,0.1)" stroke-width="24" fill="none" />
+          <circle
+            cx="100"
+            cy="100"
+            r="70"
+            :stroke="isDark ? 'rgba(255,255,255,0.1)' : 'rgba(17,24,39,0.14)'"
+            stroke-width="24"
+            fill="none"
+          />
           <g v-if="hasChartData">
             <template v-for="(segment, index) in chartSegments" :key="`segment-${segment.label}`">
               <path
                 v-if="segment.path"
                 :d="segment.path"
                 :stroke="segment.color"
-                :stroke-width="activeIndex === index ? 26 : 22"
+                :stroke-width="resolvedActiveIndex === index ? 26 : 22"
                 stroke-linecap="round"
                 fill="none"
                 class="cursor-pointer transition-all duration-200"
                 :style="{
-                  opacity: activeIndex === null || activeIndex === index ? 1 : 0.35,
-                  filter: activeIndex === index ? 'drop-shadow(0 0 12px rgba(255,255,255,0.35))' : 'none',
+                  opacity: resolvedActiveIndex === null || resolvedActiveIndex === index ? 1 : 0.35,
+                  filter: resolvedActiveIndex === index ? 'drop-shadow(0 0 12px rgba(255,255,255,0.35))' : 'none',
                 }"
-                @mouseenter="activeIndex = index"
-                @mouseleave="activeIndex = null"
-                @focus="activeIndex = index"
-                @blur="activeIndex = null"
+                @mouseenter="setHover(index)"
+                @mouseleave="setHover(null)"
+                @focus="setHover(index)"
+                @blur="setHover(null)"
+                @click="toggleSegment(index)"
                 tabindex="0"
               />
             </template>
@@ -102,7 +122,7 @@
             <p class="text-xs uppercase tracking-[0.2em] text-gray-400">
               {{ activeSegment ? activeSegment.label : "Всего" }}
             </p>
-            <p class="text-2xl font-semibold text-white">
+            <p class="text-2xl font-semibold" :class="isDark ? 'text-white' : 'text-gray-900'">
               {{ activeSegment ? activeSegment.value : total }}
             </p>
             <p v-if="activeSegment" class="text-xs text-gray-400">
@@ -120,6 +140,7 @@
 import { computed, ref } from "vue";
 import { minutesToTime } from "@/api/utils";
 import ReleaseInfoSearchLink from "@/components/ReleaseInfo/ReleaseInfoSearchLink.vue";
+import { usePreferencesStore } from "@/store/preferences";
 
 type PreferredItem = { name: string; percentage: number };
 
@@ -133,7 +154,10 @@ const props = defineProps<{
   preferredThemes: PreferredItem[];
 }>();
 
-const activeIndex = ref<number | null>(null);
+const hoverIndex = ref<number | null>(null);
+const selectedIndex = ref<number | null>(null);
+const preferencesStore = usePreferencesStore();
+const isDark = computed(() => preferencesStore.flags.theme === "dark");
 
 const labels = ["Смотрю", "В планах", "Просмотрено", "Отложено", "Брошено"];
 const colors = ["#35d07f", "#a855f7", "#4f8dfd", "#f6c453", "#ff5a5f"];
@@ -169,10 +193,23 @@ const chartSegments = computed(() => {
   });
 });
 
-const activeSegment = computed(() => {
-  if (activeIndex.value == null) return null;
-  return chartSegments.value[activeIndex.value] || null;
+const resolvedActiveIndex = computed(() => {
+  if (hoverIndex.value != null) return hoverIndex.value;
+  return selectedIndex.value;
 });
+
+const activeSegment = computed(() => {
+  if (resolvedActiveIndex.value == null) return null;
+  return chartSegments.value[resolvedActiveIndex.value] || null;
+});
+
+function setHover(index: number | null) {
+  hoverIndex.value = index;
+}
+
+function toggleSegment(index: number) {
+  selectedIndex.value = selectedIndex.value === index ? null : index;
+}
 
 function polarToCartesian(centerX: number, centerY: number, radius: number, angleInDegrees: number) {
   const angleInRadians = ((angleInDegrees - 90) * Math.PI) / 180.0;

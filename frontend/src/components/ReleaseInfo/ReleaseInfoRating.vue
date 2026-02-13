@@ -1,6 +1,6 @@
 <template>
-  <div class="rounded-xl border border-white/5 bg-[#222426] p-4 shadow">
-    <div class="flex flex-col gap-2 sm:flex-row sm:items-center">
+  <div class="rounded-xl border border-white/10 bg-[#222426]/90 p-4 shadow">
+    <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
       <div class="flex items-center gap-2">
         <span class="iconify mdi--star h-5 w-5 text-yellow-400"></span>
         <p class="text-sm font-bold text-gray-100">{{ grade.toFixed(2) }} из 5</p>
@@ -22,7 +22,7 @@
       <div v-for="score in [5,4,3,2,1]" :key="score" class="flex items-center gap-2">
         <span class="w-4 text-sm">{{ score }}</span>
         <div class="flex-1 rounded bg-[#2a2d2f]">
-          <div class="h-3 rounded bg-[#e04545]" :style="{ width: `${percent(score)}%` }"></div>
+          <div class="h-3 rounded bg-gradient-to-r from-[#f4c313] to-[#d79a00]" :style="{ width: `${percent(score)}%` }"></div>
         </div>
         <span class="w-10 text-right text-xs text-gray-400">{{ percent(score) }}%</span>
       </div>
@@ -33,7 +33,7 @@
     <div class="w-full max-w-md rounded-xl border border-white/10 bg-[#1f2022] p-6 shadow">
       <div class="flex items-center justify-between border-b border-white/10 pb-3">
         <h2 class="text-lg font-bold">Оценка</h2>
-        <button class="text-gray-400 hover:text-white" @click="isModalOpen = false">✕</button>
+        <button class="text-gray-400 hover:text-[#d21c22]" @click="isModalOpen = false">✕</button>
       </div>
       <div class="mt-4 flex items-center justify-center gap-2">
         <button
@@ -59,7 +59,7 @@
           Убрать оценку
         </button>
         <button
-          class="rounded-lg bg-[#e04545] px-4 py-2 text-sm text-white hover:bg-[#b91c1c]"
+          class="rounded-lg bg-[#d21c22] px-4 py-2 text-sm text-white hover:bg-[#b01218]"
           :disabled="isSending || selectedVote === null"
           @click="submitVote"
         >
@@ -143,5 +143,4 @@ async function submitVote() {
     isSending.value = false;
   }, 500);
 }
-
 </script>

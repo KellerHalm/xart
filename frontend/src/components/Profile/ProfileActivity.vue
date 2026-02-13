@@ -1,27 +1,27 @@
 ﻿<template>
   <div class="card-surface rounded-2xl p-5 sm:p-6">
-    <h1 class="section-title text-xl">РђРєС‚РёРІРЅРѕСЃС‚СЊ</h1>
+    <h1 class="section-title text-xl">{{ ui.title }}</h1>
     <div class="mt-3 flex flex-wrap gap-2">
       <button
         class="rounded-lg px-3 py-2 text-sm tab-pill"
         :class="tab === 'collections' ? 'tab-pill tab-pill-active' : 'tab-pill'"
         @click="tab = 'collections'"
       >
-        РљРѕР»Р»РµРєС†РёРё ( {{ collectionCount }} )
+        {{ ui.collections }} ( {{ collectionCount }} )
       </button>
       <button
         class="rounded-lg px-3 py-2 text-sm tab-pill"
         :class="tab === 'comments' ? 'tab-pill tab-pill-active' : 'tab-pill'"
         @click="tab = 'comments'"
       >
-        РљРѕРјРјРµРЅС‚Р°СЂРёРё ( {{ commentCount }} )
+        {{ ui.comments }} ( {{ commentCount }} )
       </button>
       <button
         class="rounded-lg px-3 py-2 text-sm tab-pill"
         :class="tab === 'friends' ? 'tab-pill tab-pill-active' : 'tab-pill'"
         @click="tab = 'friends'"
       >
-        Р”СЂСѓР·СЊСЏ ( {{ friendsCount }} )
+        {{ ui.friends }} ( {{ friendsCount }} )
       </button>
     </div>
 
@@ -65,6 +65,13 @@ const props = defineProps<{
   isMyProfile: boolean;
 }>();
 
+const ui = {
+  title: "\u0410\u043a\u0442\u0438\u0432\u043d\u043e\u0441\u0442\u044c",
+  collections: "\u041a\u043e\u043b\u043b\u0435\u043a\u0446\u0438\u0438",
+  comments: "\u041a\u043e\u043c\u043c\u0435\u043d\u0442\u0430\u0440\u0438\u0438",
+  friends: "\u0414\u0440\u0443\u0437\u044c\u044f",
+};
+
 const tab = ref<"collections" | "comments" | "friends">("collections");
 const collections = ref<Record<number, any>>({});
 
@@ -88,7 +95,6 @@ watch(
   { immediate: true }
 );
 </script>
-
 
 
 

@@ -29,12 +29,12 @@
       </div>
     </div>
 
-    <div class="relative mt-2">
-      <p class="whitespace-pre-wrap text-gray-200">
+    <div class="relative mt-2 overflow-hidden" :class="isHidden ? 'min-h-[3.5rem]' : ''">
+      <p class="whitespace-pre-wrap text-gray-200 transition-opacity" :class="isHidden ? 'opacity-0 select-none pointer-events-none' : 'opacity-100'" :aria-hidden="isHidden">
         {{ comment.isDeleted ? "Комментарий был удалён." : comment.message }}
       </p>
-      <button v-if="isHidden" class="absolute inset-0" @click="isHidden = false">
-        <div class="flex h-full w-full flex-col items-center justify-center rounded-md bg-black/60 px-2 py-1.5 text-white backdrop-blur">
+      <button v-if="isHidden" class="absolute inset-0 z-10 flex h-full w-full p-1" @click="isHidden = false">
+        <div class="flex h-full w-full flex-col items-center justify-center rounded-md bg-black/60 px-3 py-2 text-center text-white backdrop-blur">
           <p>{{ comment.likes_count < -5 ? "У комментария слишком низкий рейтинг." : "Данный комментарий может содержать спойлер." }}</p>
           <p class="font-bold">Нажмите, чтобы прочитать</p>
         </div>
@@ -168,7 +168,7 @@ const shouldRender = ref(true);
 const commentSend = ref(false);
 
 const containerClass = computed(() =>
-  !props.isSubComment || props.type === "collection" ? "p-6" : "pt-4"
+  !props.isSubComment || props.type === "collection" ? "p-6" : "px-4 py-4"
 );
 
 const likesClass = computed(() => {

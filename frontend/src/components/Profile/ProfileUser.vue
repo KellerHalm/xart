@@ -4,10 +4,10 @@
       v-if="showRoles"
       class="mb-4 flex flex-wrap gap-2"
     >
-      <ProfileRole v-if="isMyProfile" name="РњРѕР№ РїСЂРѕС„РёР»СЊ" color="3f83f8" />
-      <ProfileRole v-if="isBlocked" name="Р—Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ" color="f56565" />
-      <ProfileRole v-if="isVerified" name="Р’РµСЂРёС„РёС†РёСЂРѕРІР°РЅ" color="0e9f6e" />
-      <ProfileRole v-if="isSponsor" name="РЎРїРѕРЅСЃРѕСЂ Xart" color="ecc94b" />
+      <ProfileRole v-if="isMyProfile" :name="ui.roles.myProfile" color="3f83f8" />
+      <ProfileRole v-if="isBlocked" :name="ui.roles.blocked" color="f56565" />
+      <ProfileRole v-if="isVerified" :name="ui.roles.verified" color="0e9f6e" />
+      <ProfileRole v-if="isSponsor" :name="ui.roles.sponsor" color="ecc94b" />
       <ProfileRole
         v-for="role in roles"
         :key="role.id"
@@ -33,7 +33,7 @@
         <p class="flex items-center gap-2 section-title text-xl">
           {{ login }}
           <span
-            class="min-w-8 rounded-full px-2 py-0.5 text-xs font-semibold"
+            class="inline-flex h-6 min-w-8 items-center justify-center rounded-full px-2 text-xs font-semibold"
             :class="
               rating > 0
                 ? 'chip-success'
@@ -104,6 +104,15 @@ const props = defineProps<{
   isSocialHidden: boolean;
 }>();
 
+const ui = {
+  roles: {
+    myProfile: "\u041c\u043e\u0439 \u043f\u0440\u043e\u0444\u0438\u043b\u044c",
+    blocked: "\u0417\u0430\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u043d",
+    verified: "\u0412\u0435\u0440\u0438\u0444\u0438\u0446\u0438\u0440\u043e\u0432\u0430\u043d",
+    sponsor: "\u0421\u043f\u043e\u043d\u0441\u043e\u0440 Xart",
+  },
+};
+
 const preferences = usePreferencesStore();
 
 const isDark = computed(() => preferences.flags.theme === "dark");
@@ -127,6 +136,5 @@ const hasSocials = computed(
 
 const fallbackAvatar = "https://s.anixmirai.com/avatars/no_avatar.jpg";
 </script>
-
 
 

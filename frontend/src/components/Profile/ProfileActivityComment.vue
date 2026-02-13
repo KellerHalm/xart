@@ -27,7 +27,7 @@
           </p>
         </div>
       </footer>
-      <div class="relative flex flex-col py-2">
+      <div class="relative flex flex-col py-2 overflow-hidden" :class="isHidden(comment) ? 'min-h-[4rem]' : ''">
         <router-link
           v-if="comment.release && typeof comment.release !== 'number'"
           :to="`/release/${comment.release.id}`"
@@ -44,16 +44,16 @@
             }}
           </p>
         </router-link>
-        <p class="whitespace-pre-wrap text-gray-200">
+        <p class="whitespace-pre-wrap text-gray-200 transition-opacity" :class="isHidden(comment) ? 'opacity-0 select-none pointer-events-none' : 'opacity-100'" :aria-hidden="isHidden(comment)">
           {{ !comment.isDeleted ? comment.message : "Комментарий был удалён." }}
         </p>
         <button
           v-if="isHidden(comment)"
-          class="absolute inset-0"
+          class="absolute inset-0 z-10 flex h-full w-full p-1"
           @click="toggleHidden(comment.id)"
         >
           <div
-            class="flex min-h-full min-w-full flex-col items-center justify-center rounded-md bg-black/50 px-2 py-1.5 text-white backdrop-blur-[8px]"
+            class="flex h-full w-full flex-col items-center justify-center rounded-md bg-black/50 px-3 py-2 text-center text-white backdrop-blur-[8px]"
           >
             <p>
               {{
@@ -100,6 +100,4 @@ function likeClass(count: number) {
   return "text-gray-400 border-white/10";
 }
 </script>
-
-
 

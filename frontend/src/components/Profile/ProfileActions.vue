@@ -1,7 +1,7 @@
 ﻿<template>
   <div class="card-surface rounded-2xl p-5 sm:p-6">
     <p v-if="isRequestedStatus != null && !isRequestedStatus && friendStatusComputed !== 1" class="mb-2 text-sm">
-      РћС‚РїСЂР°РІРёР»(-Р°) РІР°Рј Р·Р°СЏРІРєСѓ РІ РґСЂСѓР·СЊСЏ
+      {{ ui.incomingRequest }}
     </p>
     <div class="flex flex-wrap gap-2">
       <button
@@ -9,7 +9,7 @@
         class="btn-accent rounded-lg px-4 py-2 text-sm font-semibold"
         @click="toggleEdit"
       >
-        Р РµРґР°РєС‚РёСЂРѕРІР°С‚СЊ
+        {{ ui.edit }}
       </button>
 
       <template v-else>
@@ -28,10 +28,10 @@
         >
           {{
             friendStatusComputed === 1
-              ? "РЈРґР°Р»РёС‚СЊ РёР· РґСЂСѓР·РµР№"
+              ? ui.removeFriend
               : isRequestedStatus
-              ? "Р—Р°СЏРІРєР° РѕС‚РїСЂР°РІР»РµРЅР°"
-              : "Р”РѕР±Р°РІРёС‚СЊ РІ РґСЂСѓР·СЊСЏ"
+              ? ui.requestSent
+              : ui.addFriend
           }}
         </button>
         <button
@@ -44,7 +44,7 @@
           :disabled="actionsDisabled"
           @click="addToBlocklist"
         >
-          {{ !isBlocked ? "Р—Р°Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ" : "Р Р°Р·Р±Р»РѕРєРёСЂРѕРІР°С‚СЊ" }}
+          {{ !isBlocked ? ui.block : ui.unblock }}
         </button>
       </template>
     </div>
@@ -72,6 +72,29 @@ const props = defineProps<{
   isMeBlocked: boolean;
   isBlocked: boolean;
 }>();
+
+const ui = {
+  incomingRequest: "\u041e\u0442\u043f\u0440\u0430\u0432\u0438\u043b(-\u0430) \u0432\u0430\u043c \u0437\u0430\u044f\u0432\u043a\u0443 \u0432 \u0434\u0440\u0443\u0437\u044c\u044f",
+  edit: "\u0420\u0435\u0434\u0430\u043a\u0442\u0438\u0440\u043e\u0432\u0430\u0442\u044c",
+  removeFriend: "\u0423\u0434\u0430\u043b\u0438\u0442\u044c \u0438\u0437 \u0434\u0440\u0443\u0437\u0435\u0439",
+  requestSent: "\u0417\u0430\u044f\u0432\u043a\u0430 \u043e\u0442\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0430",
+  addFriend: "\u0414\u043e\u0431\u0430\u0432\u0438\u0442\u044c \u0432 \u0434\u0440\u0443\u0437\u044c\u044f",
+  block: "\u0417\u0430\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u0442\u044c",
+  unblock: "\u0420\u0430\u0437\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u0442\u044c",
+  toast: {
+    addFriendLoading: "\u0414\u043e\u0431\u0430\u0432\u043b\u044f\u0435\u043c \u0432 \u0434\u0440\u0443\u0437\u044c\u044f...",
+    removeFriendError: "\u041e\u0448\u0438\u0431\u043a\u0430 \u0443\u0434\u0430\u043b\u0435\u043d\u0438\u044f \u0438\u0437 \u0434\u0440\u0443\u0437\u0435\u0439",
+    addFriendError: "\u041e\u0448\u0438\u0431\u043a\u0430 \u0434\u043e\u0431\u0430\u0432\u043b\u0435\u043d\u0438\u044f \u0432 \u0434\u0440\u0443\u0437\u044c\u044f",
+    removeFriendSuccess: "\u0423\u0434\u0430\u043b\u0435\u043d \u0438\u0437 \u0434\u0440\u0443\u0437\u0435\u0439",
+    addFriendSuccess: "\u0414\u043e\u0431\u0430\u0432\u043b\u0435\u043d \u0432 \u0434\u0440\u0443\u0437\u044c\u044f",
+    blockLoading: "\u0411\u043b\u043e\u043a\u0438\u0440\u0443\u0435\u043c \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f...",
+    unblockLoading: "\u0420\u0430\u0437\u0431\u043b\u043e\u043a\u0438\u0440\u0443\u0435\u043c \u043f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044f...",
+    blockError: "\u041e\u0448\u0438\u0431\u043a\u0430 \u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u043a\u0438",
+    unblockError: "\u041e\u0448\u0438\u0431\u043a\u0430 \u0440\u0430\u0437\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u043a\u0438",
+    blockSuccess: "\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c \u0437\u0430\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u043d",
+    unblockSuccess: "\u041f\u043e\u043b\u044c\u0437\u043e\u0432\u0430\u0442\u0435\u043b\u044c \u0440\u0430\u0437\u0431\u043b\u043e\u043a\u0438\u0440\u043e\u0432\u0430\u043d",
+  },
+};
 
 const actionsDisabled = ref(false);
 const profileIdIsSmaller = computed(() => props.myProfileId < props.profileId);
@@ -120,7 +143,7 @@ function toggleEdit() {
 async function addToFriends() {
   actionsDisabled.value = true;
 
-  const tid = toast.loading("Р”РѕР±Р°РІР»СЏРµРј РІ РґСЂСѓР·СЊСЏ...");
+  const tid = toast.loading(ui.toast.addFriendLoading);
 
   let url = `${ENDPOINTS.user.profile}/friend/request`;
   if (friendStatusComputed.value === 1 || isRequestedStatus.value) {
@@ -135,8 +158,8 @@ async function addToFriends() {
     toast.update(tid, {
       render:
         friendStatusComputed.value === 1 || isRequestedStatus.value
-          ? "РћС€РёР±РєР° СѓРґР°Р»РµРЅРёСЏ РёР· РґСЂСѓР·РµР№"
-          : "РћС€РёР±РєР° РґРѕР±Р°РІР»РµРЅРёСЏ РІ РґСЂСѓР·СЊСЏ",
+          ? ui.toast.removeFriendError
+          : ui.toast.addFriendError,
       type: "error",
       autoClose: 2500,
       isLoading: false,
@@ -150,8 +173,8 @@ async function addToFriends() {
   toast.update(tid, {
     render:
       friendStatusComputed.value === 1 || isRequestedStatus.value
-        ? "РЈРґР°Р»РµРЅ РёР· РґСЂСѓР·РµР№"
-        : "Р”РѕР±Р°РІР»РµРЅ РІ РґСЂСѓР·СЊСЏ",
+        ? ui.toast.removeFriendSuccess
+        : ui.toast.addFriendSuccess,
     type: "success",
     autoClose: 2500,
     isLoading: false,
@@ -163,7 +186,7 @@ async function addToFriends() {
 async function addToBlocklist() {
   actionsDisabled.value = true;
   const tid = toast.loading(
-    !props.isBlocked ? "Р‘Р»РѕРєРёСЂСѓРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ..." : "Р Р°Р·Р±Р»РѕРєРёСЂСѓРµРј РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ..."
+    !props.isBlocked ? ui.toast.blockLoading : ui.toast.unblockLoading
   );
 
   let url = `${ENDPOINTS.user.profile}/blocklist`;
@@ -173,7 +196,7 @@ async function addToBlocklist() {
   const { error } = await tryCatchAPI(fetch(url));
   if (error) {
     toast.update(tid, {
-      render: !props.isBlocked ? "РћС€РёР±РєР° Р±Р»РѕРєРёСЂРѕРІРєРё" : "РћС€РёР±РєР° СЂР°Р·Р±Р»РѕРєРёСЂРѕРІРєРё",
+      render: !props.isBlocked ? ui.toast.blockError : ui.toast.unblockError,
       type: "error",
       autoClose: 2500,
       isLoading: false,
@@ -185,7 +208,7 @@ async function addToBlocklist() {
   emit("refresh");
 
   toast.update(tid, {
-    render: !props.isBlocked ? "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ Р·Р°Р±Р»РѕРєРёСЂРѕРІР°РЅ" : "РџРѕР»СЊР·РѕРІР°С‚РµР»СЊ СЂР°Р·Р±Р»РѕРєРёСЂРѕРІР°РЅ",
+    render: !props.isBlocked ? ui.toast.blockSuccess : ui.toast.unblockSuccess,
     type: "success",
     autoClose: 2500,
     isLoading: false,
@@ -194,6 +217,5 @@ async function addToBlocklist() {
   actionsDisabled.value = false;
 }
 </script>
-
 
 

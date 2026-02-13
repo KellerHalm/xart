@@ -1,12 +1,12 @@
 ﻿<template>
   <div class="card-surface rounded-2xl p-5 sm:p-6">
     <div class="flex items-center justify-between">
-      <h1 class="section-title text-xl">РћС†РµРЅРєРё</h1>
+      <h1 class="section-title text-xl">{{ ui.title }}</h1>
       <button
         class="btn-outline rounded-lg px-3 py-1 text-xs font-semibold"
         @click="modalOpen = true"
       >
-        РџРѕСЃРјРѕС‚СЂРµС‚СЊ РІСЃРµ
+        {{ ui.showAll }}
       </button>
     </div>
     <div class="mt-4 flex flex-col gap-4">
@@ -50,6 +50,11 @@ import { unixToDate } from "@/api/utils";
 import Poster from "@/components/ReleasePoster/Poster.vue";
 import ProfileReleaseRatingsModal from "@/components/Profile/ProfileReleaseRatingsModal.vue";
 
+const ui = {
+  title: "\u041e\u0446\u0435\u043d\u043a\u0438",
+  showAll: "\u041f\u043e\u0441\u043c\u043e\u0442\u0440\u0435\u0442\u044c \u0432\u0441\u0435",
+};
+
 defineProps<{
   ratings: any[];
   token: string | null;
@@ -58,6 +63,5 @@ defineProps<{
 
 const modalOpen = ref(false);
 </script>
-
 
 

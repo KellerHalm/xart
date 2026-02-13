@@ -1,5 +1,8 @@
 <template>
-  <footer class="fixed bottom-0 left-0 right-0 z-50 block h-[70px] w-full bg-[#1b1c1d] text-white lg:hidden">
+  <footer
+    class="fixed bottom-0 left-0 right-0 z-50 block h-[70px] w-full lg:hidden"
+    :class="isDark ? 'bg-[#1b1c1d] text-white' : 'border-t border-[#e04545]/50 bg-white text-[#1f2937]'"
+  >
     <div class="flex h-full items-center justify-center gap-4">
       <template v-for="item in baseItems" :key="item.title">
         <router-link
@@ -30,18 +33,21 @@
         </button>
         <div
           v-if="menuOpen"
-          class="absolute bottom-12 right-0 w-48 rounded-lg border border-white/10 bg-[#1f2022]/95 p-2 text-sm shadow-lg"
+          class="absolute bottom-12 right-0 w-48 rounded-lg border p-2 text-sm shadow-lg"
+          :class="isDark ? 'border-white/10 bg-[#1f2022]/95 text-gray-100' : 'border-[#e04545]/30 bg-white text-[#1f2937]'"
         >
           <button
             v-if="userStore.isAuth"
-            class="flex w-full items-center gap-2 rounded-md px-2 py-2 hover:bg-white/10"
+            class="flex w-full items-center gap-2 rounded-md px-2 py-2"
+            :class="isDark ? 'hover:bg-white/10' : 'hover:bg-[#fff2f2]'"
             @click="goToProfile"
           >
             <span class="iconify mdi--user h-4 w-4"></span>
             {{ labels.profile }}
           </button>
           <button
-            class="flex w-full items-center gap-2 rounded-md px-2 py-2 hover:bg-white/10"
+            class="flex w-full items-center gap-2 rounded-md px-2 py-2"
+            :class="isDark ? 'hover:bg-white/10' : 'hover:bg-[#fff2f2]'"
             @click="emit('open-settings')"
           >
             <span class="iconify mdi--settings h-4 w-4"></span>
@@ -57,7 +63,8 @@
           </button>
           <button
             v-else
-            class="flex w-full items-center gap-2 rounded-md px-2 py-2 hover:bg-white/10"
+            class="flex w-full items-center gap-2 rounded-md px-2 py-2"
+            :class="isDark ? 'hover:bg-white/10' : 'hover:bg-[#fff2f2]'"
             @click="goToLogin"
           >
             <span class="iconify mdi--login h-4 w-4"></span>
@@ -128,6 +135,7 @@ const fifthButton = computed(() => {
   }
   return fifthButtonMap[key] ?? null;
 });
+const isDark = computed(() => preferencesStore.flags.theme === "dark");
 
 function toggleMenu() {
   menuOpen.value = !menuOpen.value;

@@ -4,9 +4,9 @@
   </div>
   <div v-else-if="error" class="flex min-h-screen items-center justify-center">
     <div class="flex flex-col gap-4">
-      <h1 class="text-2xl font-bold">РћС€РёР±РєР°</h1>
+      <h1 class="text-2xl font-bold">{{ ui.errorTitle }}</h1>
       <p class="text-lg">
-        РџСЂРѕРёР·РѕС€Р»Р° РѕС€РёР±РєР° РїСЂРё Р·Р°РіСЂСѓР·РєРµ РїСЂРѕС„РёР»СЏ. РџРѕРїСЂРѕР±СѓР№С‚Рµ РѕР±РЅРѕРІРёС‚СЊ СЃС‚СЂР°РЅРёС†Сѓ РёР»Рё Р·Р°Р№РґРёС‚Рµ РїРѕР·Р¶Рµ.
+        {{ ui.errorText }}
       </p>
     </div>
   </div>
@@ -156,6 +156,11 @@ import ProfileEditModal from "@/components/Profile/ProfileEditModal.vue";
 
 const route = useRoute();
 const userStore = useUserStore();
+const ui = {
+  errorTitle: "\u041e\u0448\u0438\u0431\u043a\u0430",
+  errorText:
+    "\u041f\u0440\u043e\u0438\u0437\u043e\u0448\u043b\u0430 \u043e\u0448\u0438\u0431\u043a\u0430 \u043f\u0440\u0438 \u0437\u0430\u0433\u0440\u0443\u0437\u043a\u0435 \u043f\u0440\u043e\u0444\u0438\u043b\u044f. \u041f\u043e\u043f\u0440\u043e\u0431\u0443\u0439\u0442\u0435 \u043e\u0431\u043d\u043e\u0432\u0438\u0442\u044c \u0441\u0442\u0440\u0430\u043d\u0438\u0446\u0443 \u0438\u043b\u0438 \u0437\u0430\u0439\u0434\u0438\u0442\u0435 \u043f\u043e\u0437\u0436\u0435.",
+};
 
 const user = ref<any | null>(null);
 const isMyProfile = ref(false);
@@ -193,4 +198,3 @@ watch(
   () => fetchProfile()
 );
 </script>
-

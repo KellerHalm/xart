@@ -3,7 +3,7 @@
     <div class="max-h-[80vh] w-full max-w-2xl overflow-hidden rounded-xl border border-white/10 bg-[#1f2022] shadow">
       <div class="flex items-center justify-between border-b border-white/10 px-4 py-3">
         <h2 class="text-lg font-bold">Выбор коллекции</h2>
-        <button class="text-gray-400 hover:text-white" @click="emit('close')">✕</button>
+        <button class="text-gray-400 hover:text-[#d21c22]" @click="emit('close')">✕</button>
       </div>
       <div class="max-h-[70vh] overflow-y-auto p-4" @scroll="handleScroll" ref="scrollRef">
         <div v-if="isLoading" class="py-4 text-center text-sm text-gray-400">Загрузка...</div>
@@ -17,7 +17,7 @@
           @click="addToCollection(collection)"
         >
           <div class="absolute bottom-0 left-0 p-3">
-            <p class="text-xl font-bold text-white">{{ collection.title }}</p>
+            <p class="text-xl font-bold text-gray-100">{{ collection.title }}</p>
             <p class="text-sm text-gray-300 line-clamp-2">{{ collection.description }}</p>
           </div>
         </button>
