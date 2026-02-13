@@ -10,9 +10,9 @@
   </div>
   <div v-else-if="release" :key="String(route.params.id)" class="release-page">
     <div class="flex flex-col gap-4 pb-8">
-      <section class="rounded-2xl border p-3 lg:p-4" :class="heroSectionClass">
-        <div class="grid grid-cols-1 gap-4 xl:grid-cols-[1.55fr_0.85fr]">
-          <div class="flex flex-col gap-4">
+      <div class="grid grid-cols-1 gap-4 xl:grid-cols-[1.55fr_0.85fr]">
+        <div class="flex min-w-0 flex-col gap-4">
+          <section class="rounded-2xl border p-3 lg:p-4" :class="heroSectionClass">
             <ReleaseInfoBasics
               embedded
               :release-id="release.id"
@@ -27,67 +27,12 @@
               :show-player-button="showPlayer"
               @open-player="scrollToPlayer"
             />
-            <ReleaseInfoInfo
-              embedded
-              :country="release.country"
-              :aired-on-date="release.aired_on_date"
-              :year="release.year ? Number(release.year) : null"
-              :episodes="{ total: release.episodes_total, released: release.episodes_released }"
-              :season="release.season"
-              :status="release.status ? release.status.name : ui.announce"
-              :duration="release.duration"
-              :category="release.category?.name || ''"
-              :broadcast="release.broadcast"
-              :studio="release.studio"
-              :author="release.author"
-              :director="release.director"
-              :genres="release.genres"
-            />
-          </div>
+          </section>
 
-          <aside class="flex flex-col gap-3">
-            <ReleaseInfoUserList
-              :user-list="userList"
-              :is-favorite="userFavorite"
-              :release-id="release.id"
-              :token="userStore.token"
-              :profile-id="userStore.user ? userStore.user.id : null"
-              :collection-count="release.collection_count"
-              @update:userList="userList = $event"
-              @update:isFavorite="userFavorite = $event"
-            />
-            <ReleaseInfoRating
-              v-if="showPlayer"
-              :release-id="release.id"
-              :grade="release.grade"
-              :token="userStore.token"
-              :votes="{
-                1: release.vote_1_count,
-                2: release.vote_2_count,
-                3: release.vote_3_count,
-                4: release.vote_4_count,
-                5: release.vote_5_count,
-                total: release.vote_count,
-                user: release.your_vote,
-              }"
-            />
-            <InfoLists
-              :completed="release.completed_count"
-              :planned="release.plan_count"
-              :abandoned="release.dropped_count"
-              :delayed="release.hold_on_count"
-              :watching="release.watching_count"
-            />
-          </aside>
-        </div>
-      </section>
-
-      <div class="grid grid-cols-1 gap-4 xl:grid-cols-[1.55fr_0.85fr]">
-        <div class="flex flex-col gap-2">
           <div id="release-player-section" ref="playerSectionRef" class="scroll-mt-24">
             <ReleasePlayer v-if="showPlayer" :id="release.id" />
           </div>
-          <div class="hidden lg:block">
+          <div class="hidden lg:block min-w-0">
             <CommentsMain
               :release-id="release.id"
               :token="userStore.token"
@@ -95,7 +40,56 @@
             />
           </div>
         </div>
-        <div class="flex flex-col gap-2">
+
+        <aside class="flex min-w-0 flex-col gap-3">
+          <ReleaseInfoInfo
+            embedded
+            :country="release.country"
+            :aired-on-date="release.aired_on_date"
+            :year="release.year ? Number(release.year) : null"
+            :episodes="{ total: release.episodes_total, released: release.episodes_released }"
+            :season="release.season"
+            :status="release.status ? release.status.name : ui.announce"
+            :duration="release.duration"
+            :category="release.category?.name || ''"
+            :broadcast="release.broadcast"
+            :studio="release.studio"
+            :author="release.author"
+            :director="release.director"
+            :genres="release.genres"
+          />
+          <ReleaseInfoUserList
+            :user-list="userList"
+            :is-favorite="userFavorite"
+            :release-id="release.id"
+            :token="userStore.token"
+            :profile-id="userStore.user ? userStore.user.id : null"
+            :collection-count="release.collection_count"
+            @update:userList="userList = $event"
+            @update:isFavorite="userFavorite = $event"
+          />
+          <ReleaseInfoRating
+            v-if="showPlayer"
+            :release-id="release.id"
+            :grade="release.grade"
+            :token="userStore.token"
+            :votes="{
+              1: release.vote_1_count,
+              2: release.vote_2_count,
+              3: release.vote_3_count,
+              4: release.vote_4_count,
+              5: release.vote_5_count,
+              total: release.vote_count,
+              user: release.your_vote,
+            }"
+          />
+          <InfoLists
+            :completed="release.completed_count"
+            :planned="release.plan_count"
+            :abandoned="release.dropped_count"
+            :delayed="release.hold_on_count"
+            :watching="release.watching_count"
+          />
           <ReleaseInfoScreenshots v-if="release.screenshot_images?.length" :images="release.screenshot_images" />
           <ReleaseInfoRelated
             v-if="release.related_releases?.length"
@@ -111,7 +105,7 @@
               :comments="release.comments || []"
             />
           </div>
-        </div>
+        </aside>
       </div>
     </div>
   </div>

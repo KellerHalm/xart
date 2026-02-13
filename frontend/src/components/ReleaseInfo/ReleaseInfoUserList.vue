@@ -13,10 +13,10 @@
     <div class="flex flex-wrap gap-2">
       <router-link
         :to="`/release/${releaseId}/collections`"
-        class="flex-1 rounded-xl bg-[#d21c22] px-3 py-2 text-center text-sm font-semibold text-white hover:bg-[#b01218]"
+        class="flex min-h-[72px] flex-1 flex-col items-center justify-center gap-1 rounded-xl bg-[#d21c22] px-3 py-2 text-sm font-semibold text-white hover:bg-[#b01218]"
       >
         {{ ui.showInCollections }}
-        <span class="ml-2 rounded bg-white/20 px-2 py-0.5 text-xs">{{ collectionCount }}</span>
+        <span class="rounded bg-white/20 px-2 py-0.5 text-xs">{{ collectionCount }}</span>
       </router-link>
       <button
         v-if="token"
