@@ -182,8 +182,3 @@ function formatLabel(item: any, index: number) {
     `День ${index + 1}`
   );
 }
-<<<<<<< HEAD
-</script>
-=======
-</script>
->>>>>>> bf91f9ec7bebbc6149867200566a401f18f831a4
