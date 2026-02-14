@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="card-surface rounded-2xl p-5 sm:p-6">
     <h1 class="section-title text-xl">Динамика просмотра серий</h1>
     <div class="relative mt-4 h-56 w-full">
@@ -182,4 +182,8 @@ function formatLabel(item: any, index: number) {
     `День ${index + 1}`
   );
 }
+<<<<<<< HEAD
 </script>
+=======
+</script>
+>>>>>>> bf91f9ec7bebbc6149867200566a401f18f831a4
