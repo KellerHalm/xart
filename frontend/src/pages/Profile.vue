@@ -10,7 +10,7 @@
       </p>
     </div>
   </div>
-  <div v-else-if="user" class="space-y-4">
+  <div v-else-if="user" class="mx-auto max-w-[1600px] space-y-5">
     <div class="flex flex-col gap-4">
       <ProfileBannedBanner
         :is-banned="user.is_banned"
@@ -25,7 +25,7 @@
     </div>
 
     <div
-      class="grid grid-cols-1 gap-4 lg:grid-cols-2"
+      class="space-y-5"
       :class="
         user.is_banned ||
         user.is_perm_banned ||
@@ -36,41 +36,47 @@
           : ''
       "
     >
-      <div class="flex flex-col gap-4">
-        <ProfileUser
-          :avatar="user.avatar || ''"
-          :login="user.login || ''"
-          :status="user.status || ''"
-          :roles="user.roles || []"
-          :rating="user.rating_score || 0"
-          :is-my-profile="isMyProfile"
-          :is-verified="user.is_verified || false"
-          :is-online="user.is_online || false"
-          :is-sponsor="user.is_sponsor || false"
-          :is-blocked="user.is_blocked || false"
-          :socials="{
-            vk: user.vk_page || null,
-            tg: user.tg_page || null,
-            tt: user.tt_page || null,
-            inst: user.inst_page || null,
-            discord: user.discord_page || null,
-          }"
-          :is-social-hidden="user.is_social_hidden"
-        />
+      <div class="grid grid-cols-1 gap-5 xl:grid-cols-2">
+        <div :class="user.is_counts_hidden ? 'xl:col-span-2' : ''">
+          <div class="flex flex-col">
+            <ProfileUser
+              :class="userStore.token ? 'rounded-b-none' : ''"
+              :avatar="user.avatar || ''"
+              :login="user.login || ''"
+              :status="user.status || ''"
+              :roles="user.roles || []"
+              :rating="user.rating_score || 0"
+              :is-my-profile="isMyProfile"
+              :is-verified="user.is_verified || false"
+              :is-online="user.is_online || false"
+              :is-sponsor="user.is_sponsor || false"
+              :is-blocked="user.is_blocked || false"
+              :socials="{
+                vk: user.vk_page || null,
+                tg: user.tg_page || null,
+                tt: user.tt_page || null,
+                inst: user.inst_page || null,
+                discord: user.discord_page || null,
+              }"
+              :is-social-hidden="user.is_social_hidden"
+            />
 
-        <ProfileActions
-          v-if="userStore.token"
-          :is-my-profile="isMyProfile"
-          :profile-id="user.id"
-          :is-friend-requests-disallowed="user.is_friend_requests_disallowed"
-          :friend-status="user.friend_status"
-          :my-profile-id="userStore.user?.id || 0"
-          :token="userStore.token"
-          :is-me-blocked="user.is_me_blocked"
-          :is-blocked="user.is_blocked"
-          @toggle-edit="isEditOpen = !isEditOpen"
-          @refresh="fetchProfile"
-        />
+            <ProfileActions
+              v-if="userStore.token"
+              class="-mt-px rounded-t-none"
+              :is-my-profile="isMyProfile"
+              :profile-id="user.id"
+              :is-friend-requests-disallowed="user.is_friend_requests_disallowed"
+              :friend-status="user.friend_status"
+              :my-profile-id="userStore.user?.id || 0"
+              :token="userStore.token"
+              :is-me-blocked="user.is_me_blocked"
+              :is-blocked="user.is_blocked"
+              @toggle-edit="isEditOpen = !isEditOpen"
+              @refresh="fetchProfile"
+            />
+          </div>
+        </div>
 
         <ProfileActivity
           v-if="!user.is_counts_hidden"
@@ -84,46 +90,38 @@
           :token="userStore.token"
           :is-my-profile="isMyProfile"
         />
-
-        <div v-if="!user.is_stats_hidden" class="hidden flex-col gap-4 lg:flex">
-          <ProfileReleaseRatings
-            v-if="user.votes && user.votes.length > 0"
-            :ratings="user.votes"
-            :token="userStore.token"
-            :profile-id="user.id"
-          />
-        </div>
       </div>
 
-      <div class="flex flex-col gap-4">
-        <template v-if="!user.is_stats_hidden">
-          <ProfileStats
-            :lists="[
-              user.watching_count,
-              user.plan_count,
-              user.completed_count,
-              user.hold_on_count,
-              user.dropped_count,
-            ]"
-            :watched-count="user.watched_episode_count"
-            :watched-time="user.watched_time"
-            :profile-id="user.id"
-            :preferred-genres="user.preferred_genres || []"
-            :preferred-audiences="user.preferred_audiences || []"
-            :preferred-themes="user.preferred_themes || []"
-          />
-          <ProfileWatchDynamic :watch-dynamic="user.watch_dynamics || []" />
-          <div class="flex flex-col gap-4 lg:hidden">
-            <ProfileReleaseRatings
-              v-if="user.votes && user.votes.length > 0"
-              :ratings="user.votes"
-              :token="userStore.token"
-              :profile-id="user.id"
-            />
-          </div>
-          <ProfileReleaseHistory v-if="user.history && user.history.length > 0" :history="user.history" />
-        </template>
+      <div v-if="!user.is_stats_hidden" class="grid grid-cols-1 gap-5 xl:grid-cols-2">
+        <ProfileStats
+          :lists="[
+            user.watching_count,
+            user.plan_count,
+            user.completed_count,
+            user.hold_on_count,
+            user.dropped_count,
+          ]"
+          :watched-count="user.watched_episode_count"
+          :watched-time="user.watched_time"
+          :profile-id="user.id"
+          :preferred-genres="user.preferred_genres || []"
+          :preferred-audiences="user.preferred_audiences || []"
+          :preferred-themes="user.preferred_themes || []"
+        />
+        <ProfileWatchDynamic :watch-dynamic="user.watch_dynamics || []" />
       </div>
+
+      <ProfileReleaseRatings
+        v-if="!user.is_stats_hidden && user.votes && user.votes.length > 0"
+        :ratings="user.votes"
+        :token="userStore.token"
+        :profile-id="user.id"
+      />
+
+      <ProfileReleaseHistory
+        v-if="!user.is_stats_hidden && user.history && user.history.length > 0"
+        :history="user.history"
+      />
     </div>
 
     <ProfileEditModal
