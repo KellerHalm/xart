@@ -1,4 +1,4 @@
-﻿<template>
+<template>
   <div class="card-surface rounded-2xl p-5 sm:p-6">
     <h1 class="section-title text-xl">Динамика просмотра серий</h1>
     <div class="relative mt-4 h-56 w-full">
