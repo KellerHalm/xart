@@ -238,7 +238,7 @@ import { computed, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useUserStore } from "@/store/auth";
 import { usePreferencesStore } from "@/store/preferences";
-import { FilterDefault } from "@/api/utils";
+import { FilterDefault, cloneFilter } from "@/api/utils";
 import type { Filter } from "@/api/utils";
 
 const emit = defineEmits<{ (e: "open-settings"): void }>();
@@ -442,7 +442,7 @@ function handleMenuItem(item: { to?: string; filter?: Partial<Filter>; disabled?
 }
 
 function goToFilter(partial: Partial<Filter>) {
-  const filter = { ...structuredClone(FilterDefault), ...partial } as Filter;
+  const filter = { ...cloneFilter(FilterDefault), ...partial } as Filter;
   const serialized = encodeURIComponent(JSON.stringify(filter));
   router.push(`/discovery/filter?filter=${serialized}`);
   megaOpen.value = false;

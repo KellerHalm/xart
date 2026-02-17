@@ -36,7 +36,7 @@
 <script setup lang="ts">
 import { onMounted, ref, watch } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import { FilterDefault, FetchFilter } from "@/api/utils";
+import { FilterDefault, FetchFilter, cloneFilter } from "@/api/utils";
 import type { Filter } from "@/api/utils";
 import { useUserStore } from "@/store/auth";
 import ReleaseSection from "@/components/ReleaseSection.vue";
@@ -47,7 +47,7 @@ const route = useRoute();
 const router = useRouter();
 const userStore = useUserStore();
 
-const filter = ref<Filter>(FilterDefault);
+const filter = ref<Filter>(cloneFilter(FilterDefault));
 const content = ref<any[]>([]);
 const page = ref(0);
 const hasMore = ref(true);
@@ -56,16 +56,31 @@ const error = ref(false);
 const filtersModalOpen = ref(false);
 
 function parseFilterParam(value: string | null) {
-  if (!value) return FilterDefault;
-  try {
-    const parsed = JSON.parse(value);
+  if (!value) return cloneFilter(FilterDefault);
+  const tryParse = (raw: string) => {
+    const parsed = JSON.parse(raw);
     if (Object.keys(parsed).length !== Object.keys(FilterDefault).length) {
-      return FilterDefault;
+      return null;
     }
-    return parsed;
+    return parsed as Filter;
+  };
+
+  try {
+    const parsed = tryParse(value);
+    if (parsed) return { ...cloneFilter(FilterDefault), ...parsed };
   } catch {
-    return FilterDefault;
+    // Fall through to decoding attempt.
   }
+
+  try {
+    const decoded = decodeURIComponent(value);
+    const parsed = tryParse(decoded);
+    if (parsed) return { ...cloneFilter(FilterDefault), ...parsed };
+  } catch {
+    // Ignore decoding/parsing errors.
+  }
+
+  return cloneFilter(FilterDefault);
 }
 
 async function fetchPage(reset = false) {
@@ -120,4 +135,3 @@ onMounted(() => {
   fetchPage(true);
 });
 </script>
-

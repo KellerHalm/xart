@@ -273,6 +273,7 @@ import {
   FilterStatusIdToString,
   FilterStudio,
   FilterYear,
+  cloneFilter,
   tryCatchAPI,
 } from "@/api/utils";
 import type { Filter } from "@/api/utils";
@@ -296,7 +297,7 @@ const emit = defineEmits<{
 const router = useRouter();
 const userStore = useUserStore();
 
-const newFilter = ref<Filter>(structuredClone(props.filter ?? FilterDefault));
+const newFilter = ref<Filter>(cloneFilter(props.filter ?? FilterDefault));
 const isGenreModalOpen = ref(false);
 const isListExcludeModalOpen = ref(false);
 const isTypeModalOpen = ref(false);
@@ -404,13 +405,12 @@ function setSort(value: string) {
 watch(
   () => props.filter,
   () => {
-    newFilter.value = structuredClone(props.filter ?? FilterDefault);
+    newFilter.value = cloneFilter(props.filter ?? FilterDefault);
   },
   { deep: true }
 );
 
 onMounted(fetchTypes);
 </script>
-
 
 

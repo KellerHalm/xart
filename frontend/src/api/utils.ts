@@ -759,6 +759,29 @@ export const FilterDefault: Filter = {
   types: [],
 };
 
+export function cloneFilter(value: Filter = FilterDefault): Filter {
+  const canStructuredClone = typeof (globalThis as { structuredClone?: unknown }).structuredClone === "function";
+  if (canStructuredClone) {
+    try {
+      return (globalThis as { structuredClone: <T>(input: T) => T }).structuredClone(value);
+    } catch {
+      // Fall through to JSON clone for reactive proxies.
+    }
+  }
+  try {
+    return JSON.parse(JSON.stringify(value)) as Filter;
+  } catch {
+    return {
+      ...FilterDefault,
+      ...value,
+      genres: [...(value.genres || [])],
+      types: [...(value.types || [])],
+      age_ratings: [...(value.age_ratings || [])],
+      profile_list_exclusions: [...(value.profile_list_exclusions || [])],
+    } as Filter;
+  }
+}
+
 export async function FetchFilter(
   {
     country,

@@ -1,0 +1,40 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "installCommand": "npm ci --prefix frontend",
+  "buildCommand": "npm run build --prefix frontend",
+  "outputDirectory": "frontend/dist",
+  "functions": {
+    "api/path.go": {
+      "includeFiles": "frontend/public/changelog/**"
+    }
+  },
+  "routes": [
+    {
+      "src": "/healthz",
+      "dest": "/api/path?__path=/healthz"
+    },
+    {
+      "src": "/api/version",
+      "dest": "/api/path?__path=/api/version"
+    },
+    {
+      "src": "/api/version/(.*)",
+      "dest": "/api/path?__path=/api/version/$1"
+    },
+    {
+      "src": "/api/proxy/(.*)",
+      "dest": "/api/path?__path=/api/proxy/$1"
+    },
+    {
+      "src": "/api/image",
+      "dest": "/api/path?__path=/api/image"
+    },
+    {
+      "handle": "filesystem"
+    },
+    {
+      "src": "/(.*)",
+      "dest": "/index.html"
+    }
+  ]
+}

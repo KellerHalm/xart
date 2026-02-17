@@ -25,7 +25,7 @@
                   {{ index + 1 }}. {{ release.title_ru || release.title_original }}
                 </h1>
                 <p class="card-subtitle mb-2 lg:mb-1 lg:-mt-1">
-                  {{ release.season ? yearSeason[release.season] : "" }}{{ release.season ? ", " : "" }}{{ release.year ? `${release.year}г.` : "" }}
+                  {{ release.season ? yearSeason[release.season] : "" }}{{ release.season && release.year ? " " : "" }}{{ release.year ? `${release.year} г.` : "" }}
                 </p>
                 <ReleaseChips
                   :grade="release.grade ? Number(release.grade.toFixed(1)) : null"
@@ -161,4 +161,3 @@ watch(
   () => fetchPage(true)
 );
 </script>
-

@@ -8,9 +8,10 @@
           <span v-else class="iconify-color twemoji--flag-for-united-nations h-6 w-6"></span>
         </div>
         <p class="font-medium text-gray-100">
-          {{ country }}
+          {{ country?.trim() }}
           <span v-if="(airedOnDate && airedOnDate !== 0) || year">, </span>
-          <span v-if="season && season !== 0">{{ yearSeason[season] }} </span>
+          <span v-if="season && season !== 0">{{ yearSeason[season] }}</span>
+          <span v-if="season && season !== 0 && year">&nbsp;</span>
           <span v-if="year">{{ year }} г.</span>
         </p>
       </div>
@@ -72,7 +73,8 @@
         <p class="font-medium text-gray-100">
           <span v-if="airedOnDate && airedOnDate !== 0">{{ unixToDate(airedOnDate, "full") }}</span>
           <span v-else-if="year">
-            <span v-if="season && season !== 0">{{ yearSeason[season] }} </span>
+            <span v-if="season && season !== 0">{{ yearSeason[season] }}</span>
+            <span v-if="season && season !== 0">&nbsp;</span>
             <span>{{ year }} г.</span>
           </span>
           <span v-else>Скоро</span>
