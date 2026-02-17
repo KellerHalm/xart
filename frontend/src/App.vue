@@ -6,7 +6,7 @@
     </div>
     <div v-else>
       <NavBarPc @open-settings="openSettings" />
-      <main class="container mx-auto px-2 pb-24 pt-4 lg:pb-0 lg:pt-20">
+      <main class="container mx-auto px-2 pb-6 pt-32 lg:pb-0 lg:pt-20">
         <router-view />
       </main>
       <NavBarMobile @open-settings="openSettings" />
