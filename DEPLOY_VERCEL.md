@@ -1,27 +1,46 @@
-# Deploy to Vercel
+﻿# Деплой на Vercel
 
-This repository is configured to deploy from the project root using `vercel.json`.
+Репозиторий настроен для деплоя из корня проекта (`xart`) с использованием `vercel.json`.
 
-## What gets deployed
+## Что разворачивается
 
-- `frontend` is built with Vite.
-- built files are served from `frontend/dist`.
-- Go API is deployed as a serverless function in `api/path.go`.
-- frontend API calls to `/api/*` continue to work without code changes.
+- Frontend собирается Vite и публикуется из `frontend/dist`.
+- Backend разворачивается как serverless‑функция на Go из `api/path.go`.
+- Маршруты `/api/*` проксируются на serverless‑функцию, чтобы фронтенд мог обращаться к API без изменений.
 
-## Steps
+## Настройки сборки (из `vercel.json`)
 
-1. Import this repo into Vercel.
-2. Keep the Root Directory as repository root (`xart`).
-3. Add environment variables if needed:
-- `API_URL` (default: `https://api-s.anixsekai.com`)
-- `CORS_ORIGIN` (default: `*`)
-- `CHANGELOG_DIR` (default: `frontend/public/changelog`)
-4. Run deploy.
+- `installCommand`: `npm ci --prefix frontend`
+- `buildCommand`: `npm run build --prefix frontend`
+- `outputDirectory`: `frontend/dist`
+- В serverless‑функцию включаются файлы changelog из `frontend/public/changelog/**`.
 
-## Local check before deploy
+## Шаги деплоя
+
+1. Импортируйте репозиторий в Vercel.
+2. Оставьте Root Directory = корень репозитория (`xart`).
+3. При необходимости задайте переменные окружения (см. ниже).
+4. Запустите деплой.
+
+## Переменные окружения
+
+- `API_URL` — URL внешнего API (по умолчанию `https://api-s.anixsekai.com`).
+- `CORS_ORIGIN` — разрешенные источники CORS (по умолчанию `*`).
+- `CHANGELOG_DIR` — каталог с changelog-файлами (по умолчанию `frontend/public/changelog`).
+
+## Локальная проверка перед деплоем
 
 ```bash
-cd frontend && npm run build
-cd ../api && go test ./...
+cd frontend
+npm ci
+npm run build
+
+cd ..\api
+go test ./...
 ```
+
+## Полезно знать
+
+- Запросы `GET /healthz` и `GET /api/healthz` обслуживаются serverless‑функцией.
+- Роутинг `/api/version`, `/api/proxy/*`, `/api/image` настроен через `vercel.json`.
+- Все остальные маршруты отдаются как SPA (`/index.html`).

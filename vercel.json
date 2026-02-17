@@ -14,6 +14,10 @@
       "dest": "/api/path?__path=/healthz"
     },
     {
+      "src": "/api/healthz",
+      "dest": "/api/path?__path=/api/healthz"
+    },
+    {
       "src": "/api/version",
       "dest": "/api/path?__path=/api/version"
     },
