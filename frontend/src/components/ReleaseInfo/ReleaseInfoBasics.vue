@@ -36,19 +36,28 @@
         </div>
 
         <div class="flex flex-wrap items-center gap-2 text-sm">
-          <span
+          <button
             v-if="status"
-            class="rounded-full border px-3 py-1" :class="isDark ? 'border-white/15 bg-white/5 text-gray-200' : 'border-black/10 bg-black/5 text-gray-700'"
+            type="button"
+            class="rounded-full border px-3 py-1"
+            :class="[
+              isDark ? 'border-white/15 bg-white/5 text-gray-200' : 'border-black/10 bg-black/5 text-gray-700',
+              statusFilterId ? 'cursor-pointer hover:border-[#d21c22]/60 hover:text-[#f1b9b9]' : 'cursor-default',
+            ]"
+            :disabled="!statusFilterId"
+            @click="handleStatusClick"
           >
             {{ status }}
-          </span>
-          <span
+          </button>
+          <button
             v-for="genre in genresPreview"
             :key="genre"
-            class="rounded-full border border-[#d21c22]/50 bg-[#d21c22]/10 px-3 py-1 text-[#f1b9b9]"
+            type="button"
+            class="rounded-full border border-[#d21c22]/50 bg-[#d21c22]/10 px-3 py-1 text-[#f1b9b9] hover:border-[#d21c22]/80 hover:text-white"
+            @click="handleGenreClick(genre)"
           >
             {{ genre }}
-          </span>
+          </button>
         </div>
 
         <div
@@ -81,9 +90,12 @@
 
 <script setup lang="ts">
 import { computed, ref } from "vue";
+import { useRouter } from "vue-router";
 import Poster from "@/components/ReleasePoster/Poster.vue";
 import ReleaseInfoStreaming from "@/components/ReleaseInfo/ReleaseInfoStreaming.vue";
 import { usePreferencesStore } from "@/store/preferences";
+import { FilterDefault, cloneFilter } from "@/api/utils";
+import type { Filter } from "@/api/utils";
 
 const props = withDefaults(
   defineProps<{
@@ -117,6 +129,7 @@ const emit = defineEmits<{
 const isFullDescription = ref(false);
 const preferencesStore = usePreferencesStore();
 const isDark = computed(() => preferencesStore.flags.theme === "dark");
+const router = useRouter();
 
 const wrapperClass = computed(() =>
   props.embedded
@@ -135,6 +148,30 @@ const genresPreview = computed(() =>
     .filter(Boolean)
     .slice(0, 4)
 );
+
+const statusFilterId = computed(() => {
+  const raw = (props.status || "").trim().toLowerCase();
+  if (!raw) return null;
+  if (raw.includes("выходит") || raw.includes("онгоинг") || raw.includes("ongoing") || raw.includes("онгоин")) return 2;
+  if (raw.includes("анонс")) return 3;
+  if (raw.includes("заверш") || raw.includes("вышел") || raw.includes("вышла") || raw.includes("вышли")) return 1;
+  return null;
+});
+
+function pushFilter(partial: Partial<Filter>) {
+  const filter = { ...cloneFilter(FilterDefault), ...partial } as Filter;
+  const serialized = encodeURIComponent(JSON.stringify(filter));
+  router.push(`/discovery/filter?filter=${serialized}`);
+}
+
+function handleStatusClick() {
+  if (!statusFilterId.value) return;
+  pushFilter({ status_id: statusFilterId.value });
+}
+
+function handleGenreClick(genre: string) {
+  pushFilter({ genres: [genre] });
+}
 
 const episodesLabel = computed(() => {
   const released = props.episodesReleased;
