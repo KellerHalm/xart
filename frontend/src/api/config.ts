@@ -14,6 +14,10 @@ export const ENDPOINTS = {
   },
   user: {
     auth: `${API_PREFIX}/auth/signIn`,
+    signUp: `${API_PREFIX}/auth/signUp`,
+    signUpVerify: `${API_PREFIX}/auth/verify`,
+    restore: `${API_PREFIX}/auth/restore`,
+    restoreVerify: `${API_PREFIX}/auth/restore/verify`,
     profile: `${API_PREFIX}/profile`,
     bookmark: `${API_PREFIX}/profile/list`,
     history: `${API_PREFIX}/history`,
