@@ -1,6 +1,6 @@
 <template>
   <header :class="headerClass" class="fixed left-0 right-0 top-0 z-50 block w-full lg:hidden">
-    <div class="container mx-auto px-3 pb-3 pt-2">
+    <div class="container mx-auto px-3 pb-2 pt-2">
       <div class="flex items-center justify-between gap-2">
         <div class="flex min-w-0 items-center gap-2">
           <button
@@ -29,7 +29,7 @@
             <span class="iconify mdi--cog h-5 w-5 text-[#e04545]"></span>
           </button>
           <div class="relative">
-            <button type="button" :class="profileBtnClass" aria-label="Профиль" @click="toggleUserMenu">
+            <button type="button" :class="profileBtnClass" :aria-label="userStore.isAuth ? 'Профиль' : 'Войти'" @click="handleProfileButton">
               <img
                 :src="userStore.isAuth ? userStore.user?.avatar : fallbackAvatar"
                 alt=""
@@ -38,8 +38,8 @@
             </button>
             <div
               v-if="menuOpen"
-              class="absolute right-0 mt-2 w-48 rounded-lg border p-2 text-sm shadow-lg"
-              :class="isDark ? 'border-white/10 bg-[#1f2022]/95 text-gray-100' : 'border-[#e04545]/30 bg-white text-[#1f2937]'"
+              class="absolute right-0 z-[60] mt-2 w-48 rounded-lg border p-2 text-sm shadow-2xl"
+              :class="isDark ? 'border-white/15 bg-[#1f2022] text-gray-100' : 'border-[#e04545]/30 bg-white text-[#1f2937]'"
             >
               <button
                 v-if="userStore.isAuth"
@@ -53,7 +53,7 @@
               <button
                 class="flex w-full items-center gap-2 rounded-md px-2 py-2"
                 :class="isDark ? 'hover:bg-white/10' : 'hover:bg-[#fff2f2]'"
-                @click="emit('open-settings')"
+                @click="openSettingsFromMenu"
               >
                 <span class="iconify mdi--settings h-4 w-4"></span>
                 Настройки
@@ -73,7 +73,7 @@
                 @click="goToLogin"
               >
                 <span class="iconify mdi--login h-4 w-4"></span>
-                Войти
+                &#1042;&#1086;&#1081;&#1090;&#1080;
               </button>
             </div>
           </div>
@@ -101,7 +101,7 @@
         </div>
       </div>
 
-      <div class="mt-2 flex w-full items-center justify-center gap-1.5 pb-1">
+      <div class="mt-1.5 flex w-full items-center justify-center gap-1.5 pb-0">
         <router-link
           v-for="item in visibleQuickLinks"
           :key="item.label"
@@ -115,6 +115,7 @@
       </div>
     </div>
 
+    <div v-if="menuOpen" class="fixed inset-0 z-40 bg-transparent" @click="closeUserMenu"></div>
     <div v-if="megaOpen" class="fixed inset-0 z-40" :class="isDark ? 'bg-black/25' : 'bg-black/10'" @click="closeMega">
       <div id="mobile-mega-panel" class="absolute inset-x-0 top-[136px]" @click.stop>
         <div class="container mx-auto px-3 pb-4">
@@ -183,7 +184,7 @@ const fallbackAvatar = "https://s.anixmirai.com/avatars/no_avatar.jpg";
 const headerClass = computed(() =>
   isDark.value
     ? "bg-[#1b1c1d]/90 text-white backdrop-blur-lg"
-    : "border-b-2 border-[#e04545]/70 bg-white/95 text-[#252525] backdrop-blur-lg"
+    : "border-b border-[#e04545]/70 bg-white/95 text-[#252525] backdrop-blur-lg"
 );
 const menuBtnClass = computed(() =>
   isDark.value
@@ -288,6 +289,10 @@ function toggleUserMenu() {
   }
 }
 
+function handleProfileButton() {
+  toggleUserMenu();
+}
+
 function toggleMega() {
   megaOpen.value = !megaOpen.value;
   if (megaOpen.value) {
@@ -297,6 +302,10 @@ function toggleMega() {
 
 function closeMega() {
   megaOpen.value = false;
+}
+
+function closeUserMenu() {
+  menuOpen.value = false;
 }
 
 function goToProfile() {
@@ -309,6 +318,11 @@ function goToProfile() {
 function goToLogin() {
   menuOpen.value = false;
   router.push(`/login?redirect=${route.fullPath}`);
+}
+
+function openSettingsFromMenu() {
+  menuOpen.value = false;
+  emit("open-settings");
 }
 
 function handleMenuItem(item: { to?: string; filter?: Partial<Filter>; disabled?: boolean }) {

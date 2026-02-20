@@ -11,7 +11,7 @@
         <span class="ml-2 h-6 w-6 iconify mdi--arrow-right icon-rotate"></span>
       </router-link>
     </div>
-    <div class="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
+    <div class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-6">
       <ReleaseCard v-for="item in content" :key="item.id" :release="item" />
     </div>
   </section>

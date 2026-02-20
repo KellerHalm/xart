@@ -73,8 +73,8 @@
           </button>
           <div
             v-if="menuOpen"
-            class="absolute right-0 mt-3 w-48 rounded-lg border p-2 text-sm shadow-lg"
-            :class="isDark ? 'border-white/10 bg-[#1f2022]/95 text-gray-100' : 'border-[#e04545]/30 bg-white text-[#1f2937]'"
+            class="absolute right-0 z-[60] mt-3 w-48 rounded-lg border p-2 text-sm shadow-2xl"
+            :class="isDark ? 'border-white/15 bg-[#1f2022] text-gray-100' : 'border-[#e04545]/30 bg-white text-[#1f2937]'"
           >
             <button
               v-if="userStore.isAuth"
@@ -88,7 +88,7 @@
             <button
               class="flex w-full items-center gap-2 rounded-md px-2 py-2"
               :class="isDark ? 'hover:bg-white/10' : 'hover:bg-[#fff2f2]'"
-              @click="emit('open-settings')"
+              @click="openSettingsFromMenu"
             >
               <span class="iconify mdi--settings h-4 w-4"></span>
               Настройки
@@ -115,6 +115,7 @@
       </div>
     </div>
 
+    <div v-if="menuOpen" class="fixed inset-0 z-40 bg-transparent" @click="closeUserMenu"></div>
     <div v-if="megaOpen" class="fixed inset-0 z-40" :class="isDark ? 'bg-black/25' : 'bg-black/10'" @click="closeMega">
       <div id="mega-panel" class="absolute inset-x-0 top-16" @click.stop>
         <div class="container mx-auto px-3 pb-6">
@@ -417,6 +418,10 @@ function closeMega() {
   megaOpen.value = false;
 }
 
+function closeUserMenu() {
+  menuOpen.value = false;
+}
+
 function goToProfile() {
   menuOpen.value = false;
   if (userStore.user?.id) {
@@ -427,6 +432,11 @@ function goToProfile() {
 function goToLogin() {
   menuOpen.value = false;
   router.push(`/login?redirect=${route.fullPath}`);
+}
+
+function openSettingsFromMenu() {
+  menuOpen.value = false;
+  emit("open-settings");
 }
 
 function handleMenuItem(item: { to?: string; filter?: Partial<Filter>; disabled?: boolean }) {

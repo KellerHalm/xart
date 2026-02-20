@@ -13,7 +13,7 @@
           <div class="grid grid-cols-3 gap-2 rounded-lg border border-white/10 bg-[#1f2022] p-1">
             <button
               type="button"
-              class="rounded-md px-2 py-2 text-xs font-medium transition sm:px-3 sm:text-sm"
+              class="w-full min-w-0 rounded-md px-1.5 py-2 text-center text-[11px] font-medium leading-tight whitespace-normal break-words transition sm:px-3 sm:text-sm"
               :class="mode === 'login' ? 'bg-[#e04545] text-white' : 'text-gray-300 hover:bg-white/5'"
               @click="switchMode('login')"
             >
@@ -21,7 +21,7 @@
             </button>
             <button
               type="button"
-              class="rounded-md px-2 py-2 text-xs font-medium transition sm:px-3 sm:text-sm"
+              class="w-full min-w-0 rounded-md px-1.5 py-2 text-center text-[11px] font-medium leading-tight whitespace-normal break-words transition sm:px-3 sm:text-sm"
               :class="mode === 'signup' ? 'bg-[#e04545] text-white' : 'text-gray-300 hover:bg-white/5'"
               @click="switchMode('signup')"
             >
@@ -29,7 +29,7 @@
             </button>
             <button
               type="button"
-              class="rounded-md px-2 py-2 text-xs font-medium transition sm:px-3 sm:text-sm"
+              class="w-full min-w-0 rounded-md px-1.5 py-2 text-center text-[11px] font-medium leading-tight whitespace-normal break-words transition sm:px-3 sm:text-sm"
               :class="mode === 'restore' ? 'bg-[#e04545] text-white' : 'text-gray-300 hover:bg-white/5'"
               @click="switchMode('restore')"
             >

@@ -17,7 +17,7 @@
             {{ item.name }}
           </button>
         </div>
-        <div class="mt-4 grid grid-cols-2 gap-2 sm:grid-cols-3 lg:grid-cols-4">
+        <div class="mt-4 grid grid-cols-2 gap-2 md:grid-cols-3 lg:grid-cols-4">
           <ReleaseCard v-for="release in content" :key="release.id" :release="release" />
           <div v-if="isLoading" class="col-span-full flex items-center justify-center py-8">
             <Spinner />

@@ -45,13 +45,13 @@
             <span
               v-for="(genre, index) in genresList.slice(0, 3)"
               :key="`release-${release.id}-genre-${genre}-${index}`"
-              class="rounded-full border border-white/30 bg-black/45 px-2 py-1 text-xs font-medium text-white shadow backdrop-blur-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.85)]"
+              class="card-genre-chip rounded-full border border-white/30 bg-black/45 px-2 py-1 text-xs font-medium text-white shadow backdrop-blur-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.85)]"
             >
               {{ genre }}
             </span>
             <span
               v-if="genresList.length > 3"
-              class="rounded-full border border-white/30 bg-black/45 px-2 py-1 text-xs font-medium text-white shadow backdrop-blur-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.85)]"
+              class="card-genre-chip rounded-full border border-white/30 bg-black/45 px-2 py-1 text-xs font-medium text-white shadow backdrop-blur-sm drop-shadow-[0_1px_1px_rgba(0,0,0,0.85)]"
             >
               +{{ genresList.length - 3 }}
             </span>
@@ -59,7 +59,7 @@
           <h3 class="card-title text-base !text-white line-clamp-2">
             {{ titleRu || titleOriginal }}
           </h3>
-          <p v-if="showOriginalSubtitle" class="card-subtitle text-xs !text-gray-200 line-clamp-1">
+          <p v-if="showOriginalSubtitle" class="card-original-subtitle card-subtitle text-xs !text-gray-200 line-clamp-1">
             {{ titleOriginal }}
           </p>
         </div>
@@ -180,3 +180,12 @@ function hexToRgba(hex: string, alpha: number) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 </script>
+
+<style scoped>
+@media (max-width: 500px) {
+  .card-genre-chip,
+  .card-original-subtitle {
+    display: none;
+  }
+}
+</style>
