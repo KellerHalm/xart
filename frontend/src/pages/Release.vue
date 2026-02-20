@@ -28,7 +28,7 @@
               @open-player="scrollToPlayer"
             />
           </section>
-          <div class="block lg:hidden">
+          <div v-if="!isDesktop">
             <ReleaseInfoInfo
               embedded
               :country="release.country"
@@ -50,7 +50,7 @@
           <div id="release-player-section" ref="playerSectionRef" class="scroll-mt-24">
             <ReleasePlayer v-if="showPlayer" :id="release.id" />
           </div>
-          <div class="hidden lg:block min-w-0">
+          <div v-if="isDesktop" class="min-w-0">
             <CommentsMain
               :release-id="release.id"
               :token="userStore.token"
@@ -60,7 +60,7 @@
         </div>
 
         <aside class="flex min-w-0 flex-col gap-3">
-          <div class="hidden lg:block">
+          <div v-if="isDesktop">
             <ReleaseInfoInfo
               embedded
               :country="release.country"
@@ -118,7 +118,7 @@
             :related-releases="release.related_releases"
           />
           <ContinueWatching v-if="userStore.token" />
-          <div class="block lg:hidden">
+          <div v-if="!isDesktop">
             <CommentsMain
               :release-id="release.id"
               :token="userStore.token"
@@ -132,7 +132,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onBeforeUnmount, onMounted, ref, watch } from "vue";
+import { computed, onBeforeUnmount, onMounted, ref, shallowRef, watch } from "vue";
 import { useRoute } from "vue-router";
 import { ENDPOINTS } from "@/api/config";
 import { useUserStore } from "@/store/auth";
@@ -162,12 +162,17 @@ const ui = {
 };
 const announceRu = "\u0430\u043d\u043e\u043d\u0441";
 
-const release = ref<any | null>(null);
+const release = shallowRef<any | null>(null);
 const isLoading = ref(true);
 const error = ref(false);
 const userList = ref(0);
 const userFavorite = ref(false);
+const isDesktop = ref(false);
 const playerSectionRef = ref<HTMLElement | null>(null);
+let releaseController: AbortController | null = null;
+let activeFetchId = 0;
+let viewportMedia: MediaQueryList | null = null;
+let viewportChangeHandler: ((event: MediaQueryListEvent) => void) | null = null;
 
 const showPlayer = computed(() => {
   const statusName = String(release.value?.status?.name || "").toLowerCase();
@@ -191,6 +196,9 @@ function scrollToPlayer() {
 async function fetchRelease() {
   const id = route.params.id;
   if (!id) return;
+  const fetchId = ++activeFetchId;
+  releaseController?.abort();
+  releaseController = new AbortController();
   isLoading.value = true;
   error.value = false;
 
@@ -198,37 +206,69 @@ async function fetchRelease() {
   if (userStore.token) {
     url += `?token=${userStore.token}`;
   }
-  const res = await fetch(url);
-  if (!res.ok) {
+  try {
+    const res = await fetch(url, { signal: releaseController.signal });
+    if (fetchId !== activeFetchId) return;
+    if (!res.ok) {
+      error.value = true;
+      isLoading.value = false;
+      return;
+    }
+    const data = await res.json();
+    if (fetchId !== activeFetchId) return;
+    if (!data?.release) {
+      error.value = true;
+      isLoading.value = false;
+      return;
+    }
+    release.value = data.release;
+    userList.value = data.release.profile_list_status || 0;
+    userFavorite.value = data.release.is_favorite || false;
+    document.title = `Xart | ${data.release.title_ru || data.release.title_original || ui.defaultTitle}`;
+    isLoading.value = false;
+  } catch (err: unknown) {
+    if (fetchId !== activeFetchId) return;
+    if (err instanceof DOMException && err.name === "AbortError") return;
     error.value = true;
     isLoading.value = false;
-    return;
+  } finally {
+    if (fetchId === activeFetchId) {
+      releaseController = null;
+    }
   }
-  const data = await res.json();
-  if (!data?.release) {
-    error.value = true;
-    isLoading.value = false;
-    return;
-  }
-  release.value = data.release;
-  userList.value = data.release.profile_list_status || 0;
-  userFavorite.value = data.release.is_favorite || false;
-  document.title = `Xart | ${data.release.title_ru || data.release.title_original || ui.defaultTitle}`;
-  isLoading.value = false;
 }
 
 onMounted(() => {
   document.body.classList.add("release-route");
+  viewportMedia = window.matchMedia("(min-width: 1024px)");
+  isDesktop.value = viewportMedia.matches;
+  viewportChangeHandler = (event: MediaQueryListEvent) => {
+    isDesktop.value = event.matches;
+  };
+  if (typeof viewportMedia.addEventListener === "function") {
+    viewportMedia.addEventListener("change", viewportChangeHandler);
+  } else {
+    viewportMedia.addListener(viewportChangeHandler);
+  }
   fetchRelease();
 });
 
 onBeforeUnmount(() => {
+  releaseController?.abort();
+  releaseController = null;
+  if (viewportMedia && viewportChangeHandler) {
+    if (typeof viewportMedia.removeEventListener === "function") {
+      viewportMedia.removeEventListener("change", viewportChangeHandler);
+    } else {
+      viewportMedia.removeListener(viewportChangeHandler);
+    }
+  }
+  viewportChangeHandler = null;
+  viewportMedia = null;
   document.body.classList.remove("release-route");
 });
 watch(
   () => [route.params.id, userStore.token],
-  () => {
-    fetchRelease();
-  }
+  fetchRelease
 );
 </script>

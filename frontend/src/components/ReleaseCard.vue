@@ -5,6 +5,9 @@
         <img
           :src="release.image || fallbackImage"
           :alt="titleRu || titleOriginal || 'release'"
+          loading="lazy"
+          decoding="async"
+          fetchpriority="low"
           class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
         />
         <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/40 to-transparent"></div>
@@ -177,4 +180,3 @@ function hexToRgba(hex: string, alpha: number) {
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
 }
 </script>
-

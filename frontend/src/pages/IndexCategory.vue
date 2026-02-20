@@ -17,7 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, shallowRef, watch } from "vue";
 import { useRoute } from "vue-router";
 import { slugToFilter } from "@/api/index-filters";
 import { FetchFilter } from "@/api/utils";
@@ -29,7 +29,8 @@ const route = useRoute();
 const userStore = useUserStore();
 
 const isLoading = ref(false);
-const content = ref<any | null>(null);
+const content = shallowRef<any | null>(null);
+let activeLoadId = 0;
 
 const sectionTitle = computed(() => {
   const slug = route.params.slug as string;
@@ -37,14 +38,17 @@ const sectionTitle = computed(() => {
 });
 
 async function loadCategory() {
+  const loadId = ++activeLoadId;
   const slug = route.params.slug as string;
   const filter = slugToFilter[slug];
   if (!filter) {
     content.value = null;
+    isLoading.value = false;
     return;
   }
   isLoading.value = true;
   const [data] = await FetchFilter(filter.filter, 0, userStore.token);
+  if (loadId !== activeLoadId) return;
   content.value = data;
   isLoading.value = false;
 }

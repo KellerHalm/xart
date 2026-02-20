@@ -1,5 +1,5 @@
 ﻿<template>
-  <section class="space-y-4">
+  <section class="release-section space-y-4">
     <div class="flex items-center justify-between gap-3 border-b border-white/10 px-4 py-3">
       <h2 class="section-title text-base sm:text-xl">{{ title }}</h2>
       <router-link

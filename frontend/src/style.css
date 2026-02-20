@@ -276,6 +276,11 @@ body {
   transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
 }
 
+.release-section {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 860px;
+}
+
 .card-surface:hover {
   transform: translateY(-3px);
   border-color: rgba(var(--xart-accent-rgb), 0.35);

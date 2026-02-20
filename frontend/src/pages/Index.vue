@@ -37,7 +37,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { onMounted, ref, shallowRef, watch } from "vue";
 import { useRouter } from "vue-router";
 import { FetchFilter } from "@/api/utils";
 import { ListAnnounce, ListFilms, ListFinished, ListLast, ListOngoing } from "@/api/index-filters";
@@ -51,31 +51,41 @@ const preferences = usePreferencesStore();
 const userStore = useUserStore();
 
 const isLoading = ref(false);
-const lastReleases = ref<any | null>(null);
-const ongoingReleases = ref<any | null>(null);
-const finishedReleases = ref<any | null>(null);
-const announceReleases = ref<any | null>(null);
-const filmsReleases = ref<any | null>(null);
+const lastReleases = shallowRef<any | null>(null);
+const ongoingReleases = shallowRef<any | null>(null);
+const finishedReleases = shallowRef<any | null>(null);
+const announceReleases = shallowRef<any | null>(null);
+const filmsReleases = shallowRef<any | null>(null);
+let activeLoadId = 0;
+
+function pickFilterData(result: PromiseSettledResult<any[]>) {
+  if (result.status !== "fulfilled") return null;
+  const [data] = result.value;
+  return data || null;
+}
 
 async function loadReleases() {
+  const loadId = ++activeLoadId;
   isLoading.value = true;
-  lastReleases.value = null;
-  ongoingReleases.value = null;
-  finishedReleases.value = null;
-  announceReleases.value = null;
-  filmsReleases.value = null;
+  const token = userStore.token;
 
-  const [last] = await FetchFilter(ListLast.filter, 0, userStore.token);
-  const [ongoing] = await FetchFilter(ListOngoing.filter, 0, userStore.token);
-  const [announce] = await FetchFilter(ListAnnounce.filter, 0, userStore.token);
-  const [finished] = await FetchFilter(ListFinished.filter, 0, userStore.token);
-  const [films] = await FetchFilter(ListFilms.filter, 0, userStore.token);
+  const [last, ongoing, announce, finished, films] = await Promise.allSettled([
+    FetchFilter(ListLast.filter, 0, token),
+    FetchFilter(ListOngoing.filter, 0, token),
+    FetchFilter(ListAnnounce.filter, 0, token),
+    FetchFilter(ListFinished.filter, 0, token),
+    FetchFilter(ListFilms.filter, 0, token),
+  ]);
 
-  lastReleases.value = last;
-  ongoingReleases.value = ongoing;
-  finishedReleases.value = finished;
-  announceReleases.value = announce;
-  filmsReleases.value = films;
+  if (loadId !== activeLoadId) {
+    return;
+  }
+
+  lastReleases.value = pickFilterData(last);
+  ongoingReleases.value = pickFilterData(ongoing);
+  announceReleases.value = pickFilterData(announce);
+  finishedReleases.value = pickFilterData(finished);
+  filmsReleases.value = pickFilterData(films);
   isLoading.value = false;
 }
 

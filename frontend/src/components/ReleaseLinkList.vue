@@ -2,7 +2,13 @@
   <router-link :to="`/release/${id}`" class="block">
     <div class="flex gap-3">
       <div class="w-24 flex-shrink-0">
-        <img :src="image || fallbackImage" alt="" class="w-full rounded-md object-cover" />
+        <img
+          :src="image || fallbackImage"
+          alt=""
+          loading="lazy"
+          decoding="async"
+          class="w-full rounded-md object-cover"
+        />
       </div>
       <div class="flex flex-col gap-1">
         <p v-if="genres && showGenres" class="text-xs text-gray-400">

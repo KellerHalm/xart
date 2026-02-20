@@ -60,7 +60,7 @@
 </template>
 
 <script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+import { computed, onMounted, ref, watch } from "vue";
 import { ENDPOINTS } from "@/api/config";
 import { useUserStore } from "@/store/auth";
 import { useUserPlayerPreferencesStore } from "@/store/player";
@@ -82,25 +82,60 @@ const selectedEpisode = ref<any | null>(null);
 const error = ref<string | null>(null);
 const loading = ref(true);
 
-function getAnonEpisodesWatched(release: number, source: number, voiceover: number) {
-  const anonEpisodesWatched = JSON.parse(localStorage.getItem("anonEpisodesWatched") || "{}");
-  if (!anonEpisodesWatched[release]) anonEpisodesWatched[release] = {};
-  if (!anonEpisodesWatched[release][source]) anonEpisodesWatched[release][source] = {};
-  if (!anonEpisodesWatched[release][source][voiceover]) anonEpisodesWatched[release][source][voiceover] = {};
-  return anonEpisodesWatched;
+const ANON_WATCHED_STORAGE_KEY = "anonEpisodesWatched";
+
+type AnonWatchedLeaf = Record<string, true>;
+type AnonEpisodesWatched = Record<
+  string,
+  Record<string, Record<string, AnonWatchedLeaf>>
+>;
+
+const anonEpisodesWatched = ref<AnonEpisodesWatched>({});
+
+function loadAnonEpisodesWatched() {
+  try {
+    const raw = localStorage.getItem(ANON_WATCHED_STORAGE_KEY);
+    if (!raw) return {};
+    const parsed = JSON.parse(raw);
+    if (parsed && typeof parsed === "object") {
+      return parsed as AnonEpisodesWatched;
+    }
+  } catch {
+    // Ignore malformed local cache and fallback to a clean state.
+  }
+  return {};
 }
 
-function getAnonCurrentEpisodeWatched(
-  release: number,
-  source: number,
-  voiceover: number,
-  episode: number
-) {
-  const anonEpisodesWatched = JSON.parse(localStorage.getItem("anonEpisodesWatched") || "{}");
-  return !!(
-    anonEpisodesWatched?.[release]?.[source]?.[voiceover]?.[episode]
+function persistAnonEpisodesWatched() {
+  localStorage.setItem(
+    ANON_WATCHED_STORAGE_KEY,
+    JSON.stringify(anonEpisodesWatched.value)
   );
 }
+
+function ensureAnonWatchedPath(release: number, source: number, voiceover: number): AnonWatchedLeaf {
+  const releaseKey = String(release);
+  const sourceKey = String(source);
+  const voiceoverKey = String(voiceover);
+  if (!anonEpisodesWatched.value[releaseKey]) anonEpisodesWatched.value[releaseKey] = {};
+  if (!anonEpisodesWatched.value[releaseKey][sourceKey]) anonEpisodesWatched.value[releaseKey][sourceKey] = {};
+  if (!anonEpisodesWatched.value[releaseKey][sourceKey][voiceoverKey]) {
+    anonEpisodesWatched.value[releaseKey][sourceKey][voiceoverKey] = {};
+  }
+  return anonEpisodesWatched.value[releaseKey][sourceKey][voiceoverKey];
+}
+
+function getCurrentAnonWatchedMap(): AnonWatchedLeaf {
+  if (!selectedSource.value || !selectedVoiceover.value) return {};
+  const releaseKey = String(props.id);
+  const sourceKey = String(selectedSource.value.id);
+  const voiceoverKey = String(selectedVoiceover.value.id);
+  return anonEpisodesWatched.value[releaseKey]?.[sourceKey]?.[voiceoverKey] || {};
+}
+
+const currentWatchedEpisodes = computed(
+  () => new Set(Object.keys(getCurrentAnonWatchedMap()))
+);
 
 function saveAnonEpisodeWatched(
   release: number,
@@ -108,23 +143,9 @@ function saveAnonEpisodeWatched(
   voiceover: number,
   episode: number
 ) {
-  const anonEpisodesWatched = getAnonEpisodesWatched(release, source, voiceover);
-  localStorage.setItem(
-    "anonEpisodesWatched",
-    JSON.stringify({
-      ...anonEpisodesWatched,
-      [release]: {
-        ...anonEpisodesWatched[release],
-        [source]: {
-          ...anonEpisodesWatched[release][source],
-          [voiceover]: {
-            ...anonEpisodesWatched[release][source][voiceover],
-            [episode]: true,
-          },
-        },
-      },
-    })
-  );
+  const watchedByVoiceover = ensureAnonWatchedPath(release, source, voiceover);
+  watchedByVoiceover[String(episode)] = true;
+  persistAnonEpisodesWatched();
 }
 
 function setError(message: string) {
@@ -178,14 +199,18 @@ async function fetchInfo(url: string, type: "voiceover" | "sources" | "episodes"
     selectedEpisode.value = data.episodes[0];
 
     if (selectedSource.value && selectedVoiceover.value) {
-      const watched = getAnonEpisodesWatched(
-        props.id,
-        selectedSource.value.id,
-        selectedVoiceover.value.id
-      );
-      const watchedEpisodes = watched?.[props.id]?.[selectedSource.value.id]?.[selectedVoiceover.value.id];
-      if (watchedEpisodes && Object.keys(watchedEpisodes).length) {
-        let lastWatchedEpisode = Number(Object.keys(watchedEpisodes).pop());
+      const watchedEpisodes = Object.keys(
+        ensureAnonWatchedPath(
+          props.id,
+          selectedSource.value.id,
+          selectedVoiceover.value.id
+        )
+      )
+        .map((item) => Number(item))
+        .filter((item) => !Number.isNaN(item))
+        .sort((a, b) => a - b);
+      if (watchedEpisodes.length) {
+        let lastWatchedEpisode = watchedEpisodes[watchedEpisodes.length - 1] || 0;
         if (
           !["Sibnet", "Sibnet (не работает)"].includes(selectedSource.value.name)
         ) {
@@ -221,17 +246,12 @@ function onSourceChange(event: Event) {
 
 function addToHistory(episode: any) {
   if (!selectedSource.value || !selectedVoiceover.value) return;
-  const anon = getAnonEpisodesWatched(
-    props.id,
-    selectedSource.value.id,
-    selectedVoiceover.value.id
-  );
+  const watchedByCurrentSelection = getCurrentAnonWatchedMap();
+  const episodeKey = String(episode.position);
   if (
     preferences.flags.saveWatchHistory &&
     !episode.is_watched &&
-    !Object.keys(anon[props.id][selectedSource.value.id][selectedVoiceover.value.id]).includes(
-      episode.position.toString()
-    )
+    !watchedByCurrentSelection[episodeKey]
   ) {
     episode.is_watched = true;
     saveAnonEpisodeWatched(
@@ -266,19 +286,11 @@ function episodeLabel(episode: any) {
 }
 
 function isWatched(episode: any) {
-  if (!selectedSource.value || !selectedVoiceover.value) return false;
-  return (
-    episode.is_watched ||
-    getAnonCurrentEpisodeWatched(
-      props.id,
-      selectedSource.value.id,
-      selectedVoiceover.value.id,
-      episode.position
-    )
-  );
+  return episode.is_watched || currentWatchedEpisodes.value.has(String(episode.position));
 }
 
 onMounted(() => {
+  anonEpisodesWatched.value = loadAnonEpisodesWatched();
   loading.value = true;
   fetchInfo(`${ENDPOINTS.release.episode}/${props.id}`, "voiceover");
 });
