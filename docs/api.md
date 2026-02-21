@@ -1,10 +1,12 @@
 ﻿# API
 
-Ниже перечислены эндпоинты, которые предоставляет бэкенд Xart.
+Ниже перечислены эндпоинты, которые предоставляет бэкенд Xart (локальный или Vercel).
 
 ## Проверка здоровья
 
-`GET /healthz`
+`GET /healthz` — локальный бэкенд и Vercel.
+
+`GET /api/healthz` — только Vercel.
 
 Ответ:
 ```json
@@ -15,7 +17,7 @@
 
 `GET /api/version`
 
-`GET /api/version/{version}`
+`GET /api/version/{version}` — параметр пока не используется, возвращается тот же ответ.
 
 Возвращает текущую версию и список предыдущих версий, найденных в `CHANGELOG_DIR`:
 
@@ -32,8 +34,8 @@
 
 Особенности:
 - Тело и заголовки запроса пересылаются во внешний API.
-- `User-Agent` устанавливается на значение `DefaultUserAgent` из `backend/main.go`.
-- Для API v2 можно указать `API-Version=v2` в query-параметрах или передать заголовок `API-Version: v2`.
+- `User-Agent` устанавливается на значение `DefaultUserAgent`.
+- Для API v2 можно указать `API-Version: v2` (заголовок) или `API-Version=v2` (query).
 
 ## Прокси изображений
 
@@ -47,5 +49,6 @@
 ## CORS
 
 - `Access-Control-Allow-Origin` настраивается через `CORS_ORIGIN`.
+- Применяется к `/api/version`, `/api/proxy/*`, `/api/image`.
 - Разрешенные методы: `GET, POST, OPTIONS`.
 - Разрешенные заголовки: `Content-Type, API-Version, Api-Version, Sign`.

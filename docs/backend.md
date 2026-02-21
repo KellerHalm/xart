@@ -1,10 +1,12 @@
 ﻿# Backend
 
-Backend реализован на Go и предоставляет набор служебных эндпоинтов, а также проксирование запросов во внешний API.
+Бэкенд написан на Go и поставляется в двух вариантах:
+- локальный HTTP‑сервер в `backend/`;
+- serverless‑функция для Vercel в `api/path.go`.
 
-## Запуск
+Обе реализации разделяют одну и ту же логику проксирования и эндпоинтов.
 
-Из папки `backend`:
+## Запуск локального бэкенда
 
 ```bash
 cd backend
@@ -13,12 +15,22 @@ go run .
 
 По умолчанию сервер запускается на порту `8080`.
 
+## Запуск serverless‑функции (Vercel)
+
+Функция находится в `api/path.go` и собирается Vercel. Локальный запуск возможен через Vercel CLI, но отдельный скрипт в репозитории не предусмотрен.
+
 ## Переменные окружения
 
-- `PORT` - порт HTTP-сервера, по умолчанию `8080`.
-- `API_URL` - URL внешнего API, по умолчанию `https://api-s.anixsekai.com`.
-- `CHANGELOG_DIR` - каталог с файлами changelog, по умолчанию `../frontend/public/changelog`.
-- `CORS_ORIGIN` - разрешенный источник для CORS, по умолчанию `*`.
+Локальный бэкенд (`backend/`):
+- `PORT` — порт HTTP‑сервера (по умолчанию `8080`).
+- `API_URL` — URL внешнего API (по умолчанию `https://api-s.anixsekai.com`).
+- `CHANGELOG_DIR` — каталог с файлами changelog (по умолчанию `../frontend/public/changelog`).
+- `CORS_ORIGIN` — разрешенный источник для CORS (по умолчанию `*`).
+
+Serverless‑функция (`api/`):
+- `API_URL` — URL внешнего API (по умолчанию `https://api-s.anixsekai.com`).
+- `CHANGELOG_DIR` — каталог с файлами changelog (по умолчанию `frontend/public/changelog`).
+- `CORS_ORIGIN` — разрешенный источник для CORS (по умолчанию `*`).
 
 ## Эндпоинты
 
@@ -26,7 +38,7 @@ go run .
 
 ## Версии приложения
 
-Текущая версия задается константой `CurrentAppVersion` в `backend/main.go`. Список предыдущих версий формируется по файлам `*.md` в каталоге changelog.
+Текущая версия задается константой `CurrentAppVersion` в `backend/main.go` и `api/path.go`. Список предыдущих версий формируется по файлам `*.md` в каталоге changelog.
 
 ## Прокси изображений
 
@@ -36,4 +48,4 @@ go run .
 
 ## CORS
 
-CORS включен для `/api/*` и использует значение из `CORS_ORIGIN`.
+CORS включен для `/api/version`, `/api/proxy/*` и `/api/image` и использует значение из `CORS_ORIGIN`.

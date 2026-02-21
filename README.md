@@ -1,30 +1,18 @@
-﻿# Xart - неофициальный веб-клиент Anixart
+﻿# Xart — неофициальный веб-клиент Anixart
 
-Xart - это неофициальный веб-клиент Anixart для просмотра аниме и манги. Проект состоит из фронтенда на Vue 3 и бэкенда на Go. Приложение предоставляет интерфейс для поиска, просмотра и отслеживания контента с авторизацией и персонализацией.
+Xart — неофициальный веб-клиент Anixart для просмотра аниме и манги. Проект включает фронтенд на Vue 3 и Go‑бэкенд для проксирования запросов к API.
 
 Документация: [docs/README.md](docs/README.md)
 
-## Архитектура
+## Состав проекта
 
-### Frontend
-- Фреймворк: Vue 3 (Composition API)
-- Язык: TypeScript
-- Стили: Tailwind CSS
-- Маршрутизация: Vue Router
-- Состояние: Pinia
-- Сборка: Vite
-- Иконки: Iconify
-- Дополнительно: CropperJS, Markdown-it, Swiper
+- Frontend: Vue 3 (Composition API), TypeScript, Vite, Tailwind CSS, Pinia, Vue Router, Iconify, CropperJS, Markdown-it, Swiper.
+- Backend (локально): Go HTTP‑сервер в `backend/`.
+- Serverless API (Vercel): Go‑функция в `api/path.go`, маршрутизация через `vercel.json`.
+- Changelog: `frontend/public/changelog` (используется эндпоинтом `/api/version`).
 
-### Backend
-- Язык: Go 1.25.1
-- Тип: HTTP-сервер
-- Версия приложения: 3.9.2
-- Назначение: проксирование запросов к API anixart и выдача версии приложения
+## Возможности
 
-## Функциональность
-
-### Frontend
 - Просмотр аниме и манги
 - Поиск контента
 - Авторизация пользователей
@@ -34,34 +22,15 @@ Xart - это неофициальный веб-клиент Anixart для пр
 - Темная тема
 - Хронология релизов
 
-### Backend
-- Проксирование запросов к API anixart.com
-- Управление версиями приложения
-- Обработка CORS
-- Логирование запросов
-- Проксирование изображений (whitelist доменов)
+## Требования
 
-## Технологии
-
-### Frontend
-- Vue 3
-- TypeScript
-- Tailwind CSS
-- Pinia
-- Vue Router
-- Vite
-- CropperJS
-- Markdown-it
-- Swiper
-
-### Backend
-- Go
-- HTTP-сервер
-- JSON API
+- Node.js + npm
+- Go 1.25.1+ для локального бэкенда
+- Go 1.22+ для serverless‑функции (Vercel)
 
 ## Быстрый старт (Windows)
 
-1. Запуск дев-режима в двух окнах PowerShell:
+1. Запуск дев‑режима (скрипт откроет два окна PowerShell):
 ```bash
 .\run-dev.ps1 -InstallDeps
 ```
@@ -76,7 +45,7 @@ Xart - это неофициальный веб-клиент Anixart для пр
 .\run-dev.ps1 -BackendPort 8081 -FrontendPort 5174
 ```
 
-## Установка и запуск вручную
+## Запуск вручную
 
 ### Frontend
 
@@ -86,67 +55,52 @@ cd frontend
 npm install
 ```
 
-2. Запустите dev-сервер:
+2. Запустите dev‑сервер:
 ```bash
 npm run dev -- --port 5173
 ```
 
-3. Для сборки продакшен-версии:
+3. Для сборки продакшен‑версии:
 ```bash
 npm run build
 ```
 
-### Backend
+### Backend (локально)
 
-1. Убедитесь, что у вас установлена Go 1.25.1 или выше.
-
-2. Запустите сервер:
+1. Запустите сервер:
 ```bash
 cd backend
 go run .
 ```
 
-3. По умолчанию сервер запускается на порту 8080.
+2. По умолчанию сервер запускается на порту 8080.
 
-## Переменные окружения
+## Конфигурация
 
-Backend поддерживает следующие переменные окружения:
+Frontend переменные окружения:
+- `VITE_API_URL` — базовый префикс для прокси (по умолчанию `/api/proxy`). Укажите полный URL, если бэкенд находится на другом домене.
 
-- `PORT` - порт, на котором будет запущен сервер (по умолчанию 8080)
-- `API_URL` - URL внешнего API (по умолчанию https://api-s.anixsekai.com)
-- `CHANGELOG_DIR` - директория с файлами изменений (по умолчанию ../frontend/public/changelog)
-- `CORS_ORIGIN` - разрешенные источники для CORS (по умолчанию *)
+Backend и serverless‑функция поддерживают:
+- `PORT` — порт сервера (только для локального бэкенда, по умолчанию 8080)
+- `API_URL` — URL внешнего API (по умолчанию `https://api-s.anixsekai.com`)
+- `CHANGELOG_DIR` — каталог changelog‑файлов (по умолчанию `../frontend/public/changelog` для `backend/` и `frontend/public/changelog` для Vercel)
+- `CORS_ORIGIN` — разрешенные источники для CORS (по умолчанию `*`)
 
-## Структура проекта
+## Версия приложения
 
-```
-xart/
-|- backend/              # Go-сервер
-|  |- go.mod             # Зависимости Go
-|  `- main.go            # Основной файл сервера
-|- frontend/             # Vue.js приложение
-|  |- public/            # Публичные ресурсы
-|  |- src/               # Исходный код
-|  |  |- assets/         # Статические ресурсы
-|  |  |- components/     # Компоненты Vue
-|  |  |- views/          # Страницы приложения
-|  |  |- router/         # Маршруты
-|  |  `- stores/         # Хранилища Pinia
-|  |- index.html         # Главная HTML-страница
-|  `- package.json       # Зависимости и скрипты
-|- run-dev.cmd           # Скрипт запуска для Windows (CMD)
-`- run-dev.ps1           # Скрипт запуска для Windows (PowerShell)
-```
+- `backend/main.go`: `CurrentAppVersion`
+- `api/path.go`: `CurrentAppVersion`
+- `frontend/src/api/config.ts`: `CURRENT_APP_VERSION`
 
 ## API
 
-Backend предоставляет следующие эндпоинты:
+- `GET /healthz` — проверка статуса (локальный бэкенд и Vercel)
+- `GET /api/healthz` — проверка статуса (только Vercel)
+- `GET /api/version` — текущая версия и список предыдущих (читается из `frontend/public/changelog`)
+- `GET/POST/OPTIONS /api/proxy/*` — прокси‑запросы к внешнему API
+- `GET /api/image?url=...` — проксирование изображений (разрешены `*.anixmirai.com` и `*.anixsekai.com`)
 
-- `GET /healthz` - проверка статуса сервера
-- `GET /api/version` - информация о текущей версии приложения
-- `GET /api/version/{version}` - информация о конкретной версии
-- `GET/POST/OPTIONS /api/proxy/*` - прокси-запросы к внешнему API
-- `GET /api/image?url=...` - проксирование изображений, разрешены домены *.anixmirai.com и *.anixsekai.com
+Для прокси можно указать `API-Version: v2` (заголовок) или `API-Version=v2` (query).
 
 ## Развертывание
 
